@@ -57,7 +57,7 @@ adapter.removeFooter(key)
 
 ##### 2.loadMore And No more
 
-* 1. 设置loadMoreView,继承ILoaderView 接口
+###### 一. 设置loadMoreView,继承ILoaderView 接口
 ```
 class LoaderView : ILoaderView {
 
@@ -67,7 +67,7 @@ class LoaderView : ILoaderView {
 }
 ```
 
-* 2. 添加loaderView
+###### 二. 添加loaderView
 ```
 val loader = LoaderView()
 adapter.addLoaderView(loader)
@@ -194,8 +194,7 @@ class GridSpanDelegate : ItemViewDelegate<ModelBean>() {
 }
 ```
 
-5.更丰富的 刷新、load more和 no more 效果</br>
-请结合[SimpleRefreshLayout](https://github.com/dengzq/SimpleRefreshLayout)实现或查看demo;
+##### 5.更丰富的 刷新、load more和 no more 效果 请结合</br>[SimpleRefreshLayout](https://github.com/dengzq/SimpleRefreshLayout)实现或查看demo;
 
 ### Todo list
 
