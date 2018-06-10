@@ -99,9 +99,9 @@ adapter.loadMoreFail()    //loadMore fail, show load error layout if it's exist;
 ###### 4. 关于autoLoad,加载失败
 
 1)默认情况下，加载更多使用`自动加载`方式，如果需要`点击加载`的方式，请通过loader的点击事件实现;</br>
-2)加载失败调用adapter.loadMorefail()会展示加载失败视图，可以通过loader点击事件实现重新请求;
-特别的，adapter.goReloading()会重新回调onLoadMoreListener 实现重新请求，如果你的请求没有写在onLoadMoreListener,
-请在state==LoadState.ERROR内实现 重新请求逻辑.
+2)加载失败调用`adapter.loadMorefail()`会展示加载失败视图，可以通过loader点击事件实现重新请求;</br>
+特别的，`adapter.goReloading()`会重新回调`onLoadMoreListener`. 如果你的请求逻辑没有写在`onLoadMoreListener`内,
+请自行在 `state==LoadState.ERROR` 时实现重新请求逻辑.
 ```
 adapter.autoLoadMore(false)
 adapter.loaderClickListener=object :OnLoaderClickListener{
