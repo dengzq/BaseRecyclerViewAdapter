@@ -10,15 +10,15 @@
 
 ![headerAndFooter.gif](https://github.com/dengzq/BaseRecyclerViewAdapter/blob/master/image/img_header.gif)
 
-![loader.gif](https://github.com/dengzq/BaseRecyclerViewAdapter/tree/master/image/img_loader.gif)
+![loader.gif](https://github.com/dengzq/BaseRecyclerViewAdapter/blob/master/image/img_loader.gif)
 
-![singleItem.gif](https://github.com/dengzq/BaseRecyclerViewAdapter/tree/master/image/img_single.gif)
+![singleItem.gif](https://github.com/dengzq/BaseRecyclerViewAdapter/blob/master/image/img_single.gif)
 
-![multiItem.gif](https://github.com/dengzq/BaseRecyclerViewAdapter/tree/master/image/img_multi_item.gif)
+![multiItem.gif](https://github.com/dengzq/BaseRecyclerViewAdapter/blob/master/image/img_multi_item.gif)
 
-![multiClassify.gif](https://github.com/dengzq/BaseRecyclerViewAdapter/tree/master/image/img_multi_classify.gif)
+![multiClassify.gif](https://github.com/dengzq/BaseRecyclerViewAdapter/blob/master/image/img_multi_classify.gif)
 
-![spanSize.gif](https://github.com/dengzq/BaseRecyclerViewAdapter/tree/master/image/img_span_size.gif)
+![spanSize.gif](https://github.com/dengzq/BaseRecyclerViewAdapter/blob/master/image/img_span_size.gif)
 
 
 ### 使用
