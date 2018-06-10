@@ -9,8 +9,10 @@
 ### demo演示
 ![headerAndFooter.gif](https://github.com/dengzq/BaseRecyclerViewAdapter/tree/master/image/img_header.gif)
 ![loader.gif](https://github.com/dengzq/BaseRecyclerViewAdapter/tree/master/image/img_loader.gif)
+
 ![singleItem.gif](https://github.com/dengzq/BaseRecyclerViewAdapter/tree/master/image/img_single.gif)
 ![multiItem.gif](https://github.com/dengzq/BaseRecyclerViewAdapter/tree/master/image/img_multi_item.gif)
+
 ![multiClassify.gif](https://github.com/dengzq/BaseRecyclerViewAdapter/tree/master/image/img_multi_classify.gif)
 ![spanSize.gif](https://github.com/dengzq/BaseRecyclerViewAdapter/tree/master/image/img_span_size.gif)
 
@@ -32,17 +34,15 @@ compile 'com.dengzq.widget:baservadapter:0.7.0'
 ```
 
 #### 基本使用
-1. HeaderAndFooter
+
+##### 1. HeaderAndFooter
 ```
-//add a normal header view
 val header = layoutInflater.inflate(R.layout.layout_header, recycler_view, false)
 adapter.addHeaderView(header)
 
-//if you need to remove it at some time, try to bind a header key for it;
 //add : adapter.addHeaderView(key,header)
 //remove: adapter.removeHeader(key)
 
-//add a normal footer view
 val footer = layoutInflater.inflate(R.layout.layout_footer, recycler_view, false)
 adapter.addFooterView(footer)
 
@@ -50,16 +50,18 @@ adapter.addFooterView(footer)
 //adapter.removeFooter(key)
 ```
 
-2.loadMore And No more
+##### 2.loadMore And No more
+
 1)设置loadMoreView,继承ILoaderView 接口
 ```
 class LoaderView : ILoaderView {
-    //bind loading layout;
+
     override fun getLoadingLayoutId(): Int = R.layout.layout_loader
-    //bind load error layout;
+
     override fun getErrorLayoutId(): Int = R.layout.layout_load_err
 }
 ```
+
 2)添加loaderView
 ```
 val loader = LoaderView()
@@ -68,6 +70,7 @@ adapter.addLoaderView(loader)
 //默认情况下，添加loader则开启加载更多功能，如果需要关闭：
 //adapter.removeLoaderView() or adapter.openLoadMore(false)
 ```
+
 3)加载更多回调
 ```
 adapter.loadMoreListener = object : OnLoadMoreListener {
@@ -76,12 +79,16 @@ adapter.loadMoreListener = object : OnLoadMoreListener {
             }
         }
 ```
+
 当loadMore请求结束，请回调
+
 ```
 adapter.loadMoreSuccess() //loadMore success
 adapter.loadMoreFail()    //loadMore fail, show load error layout if it's exist;
 ```
+
 4)关于autoLoad,加载失败
+
 默认情况下，开启的是loader autoLoad方式，如果需要点击加载ClickLoad
 ```
 adapter.autoLoadMore(false)
@@ -154,8 +161,6 @@ class ClassifyAdapter(context: Context, presenter: IClassifyPresenter) : MultiIt
     init {
         addItemClassifyDelegate(ClassifyBannerDelegate(context, presenter))
         addItemClassifyDelegate(ClassifyMenuDelegate(presenter))
-        addItemClassifyDelegate(ClassifyTabDelegate(context, presenter))
-        addItemClassifyDelegate(ClassifyMsgDelegate(presenter))
     }
 }
 
@@ -180,16 +185,20 @@ class GridSpanDelegate : ItemViewDelegate<ModelBean>() {
 }
 ```
 
-5.更丰富的 刷新、load more和无更多效果，请结合[SimpleRefreshLayout](https://github.com/dengzq/SimpleRefreshLayout)实现或查看demo;
+5.更丰富的 刷新、load more和无更多效果，</p>
+请结合[SimpleRefreshLayout](https://github.com/dengzq/SimpleRefreshLayout)实现或查看demo;
 
 ### Todo list
-1.预加载布局
-2.拖拽、侧滑、分级
-3.动画
+
+1.预加载布局</p>
+2.拖拽、侧滑、分级</p>
+3.动画</p>
 etc.
 
 ### 特别感谢
+
 [hongyangAndroid大大](https://github.com/hongyangAndroid/baseAdapter)
+
 还有我的[小伙伴](https://github.com/juicy-zx)
 
 #### 如果你喜欢本项目，请点个✨哦~
