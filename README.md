@@ -127,7 +127,7 @@ class SingleTypeAdapter(context: Context, list: ArrayList<T>) : CommonAdapter<T>
 
 ###### 2. 多类型 [item位置不确定,类似聊天页面]
 ```
-1.继承ItemViewDelegate<T>,实现当前类型item的视图功能
+1).继承ItemViewDelegate<T>,实现当前类型item的视图功能
 class MultiModelDelegate:ItemViewDelegate<ModelBean>(){
 
     override fun isForViewType(t: ModelBean, position: Int): Boolean=t.type==0
@@ -139,7 +139,7 @@ class MultiModelDelegate:ItemViewDelegate<ModelBean>(){
     }
 }
 
-2.继承MultiItemTypeAdapter<T>,将delegate添加到adapter
+2).继承MultiItemTypeAdapter<T>,将delegate添加到adapter
 class MultiItemAdapter(context: Context, list: List<ModelBean>) : MultiItemTypeAdapter<ModelBean>(context, list) {
     init {
         addItemViewDelegate(MultiModelDelegate())
@@ -147,13 +147,13 @@ class MultiItemAdapter(context: Context, list: List<ModelBean>) : MultiItemTypeA
     }
 }
 
-3.设置adapter
+3).设置adapter
 recycler_view.adapter = MultiItemAdapter(context, list)
 ```
 
 ###### 3. 多类型 [item位置确定，并且页面由几个接口组成，类似app首页]
 ```
-1.继承ItemClassifyDelegate,实现当前类型item的视图功能
+1).继承ItemClassifyDelegate,实现当前类型item的视图功能
 class ClassifyMsgDelegate(private val presenter: IClassifyPresenter) : ItemClassifyDelegate() {
     override fun getItemSize(): Int = presenter.getClassifyNews().size
 
@@ -165,7 +165,7 @@ class ClassifyMsgDelegate(private val presenter: IClassifyPresenter) : ItemClass
     }
 }
 
-2.继承MultiItemClassifyAdapter,添加delegate
+2).继承MultiItemClassifyAdapter,添加delegate
 class ClassifyAdapter(context: Context, presenter: IClassifyPresenter) : MultiItemClassifyAdapter(context) {
     init {
         addItemClassifyDelegate(ClassifyBannerDelegate(context, presenter))
@@ -173,7 +173,7 @@ class ClassifyAdapter(context: Context, presenter: IClassifyPresenter) : MultiIt
     }
 }
 
-3.设置adapter
+3).设置adapter
 recycler_view.adapter = ClassifyAdapter(activity!!, presenter)
 ```
 
