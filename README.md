@@ -202,9 +202,6 @@ class GridSpanDelegate : ItemViewDelegate<ModelBean>() {
 
 </p>
 
-### 更丰富的刷新、加载效果 
-请结合[SimpleRefreshLayout](https://github.com/dengzq/SimpleRefreshLayout)实现或查看demo;
-
 
 ### Todo list
 
@@ -212,6 +209,9 @@ class GridSpanDelegate : ItemViewDelegate<ModelBean>() {
 2.拖拽、侧滑、分级</br>
 3.动画</br>
 etc.
+
+### 更丰富的刷新、加载效果 
+请结合[SimpleRefreshLayout](https://github.com/dengzq/SimpleRefreshLayout)实现或查看demo;
 
 ### 特别感谢
 
