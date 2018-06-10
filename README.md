@@ -8,7 +8,9 @@
 
 ### demo演示
 
-![headerAndFooter.gif](https://github.com/dengzq/BaseRecyclerViewAdapter/blob/master/image/img_header.gif=100x200)
+<img width="150" height="150" src="https://github.com/dengzq/BaseRecyclerViewAdapter/blob/master/image/img_header.gif"/>
+
+![headerAndFooter.gif](https://github.com/dengzq/BaseRecyclerViewAdapter/blob/master/image/img_header.gif)
 ![loader.gif](https://github.com/dengzq/BaseRecyclerViewAdapter/blob/master/image/img_loader.gif)
 ![singleItem.gif](https://github.com/dengzq/BaseRecyclerViewAdapter/blob/master/image/img_single.gif)
 
