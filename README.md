@@ -178,8 +178,7 @@ recycler_view.adapter = ClassifyAdapter(activity!!, presenter)
 
 ##### 四.Item间不同的spanSize
 ```
-//只需要让delegate重写getItemSpanSize(position: Int)方法，GridLayoutManager会获取到该
-//span size改变布局;
+//重写getItemSpanSize(position: Int)方法;
 
 class GridSpanDelegate : ItemViewDelegate<ModelBean>() {
 
