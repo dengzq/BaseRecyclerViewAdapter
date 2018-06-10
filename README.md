@@ -50,9 +50,10 @@ adapter.addFooterView(footer)
 //adapter.removeFooter(key)
 ```
 
+</p>
 ##### 2.loadMore And No more
 
-* 1)设置loadMoreView,继承ILoaderView 接口
+* 1.设置loadMoreView,继承ILoaderView 接口
 ```
 class LoaderView : ILoaderView {
 
@@ -62,7 +63,7 @@ class LoaderView : ILoaderView {
 }
 ```
 
-* 2)添加loaderView
+* 2.添加loaderView
 ```
 val loader = LoaderView()
 adapter.addLoaderView(loader)
@@ -71,7 +72,7 @@ adapter.addLoaderView(loader)
 //adapter.removeLoaderView() or adapter.openLoadMore(false)
 ```
 
-* 3)加载更多回调
+* 3.加载更多回调
 ```
 adapter.loadMoreListener = object : OnLoadMoreListener {
             override fun onLoadMore() {
@@ -87,7 +88,7 @@ adapter.loadMoreSuccess() //loadMore success
 adapter.loadMoreFail()    //loadMore fail, show load error layout if it's exist;
 ```
 
-* 4)关于autoLoad,加载失败
+* 4.关于autoLoad,加载失败
 
 默认情况下，开启的是loader autoLoad方式，如果需要点击加载ClickLoad
 ```
@@ -106,9 +107,11 @@ adapter.loaderClickListener=object :OnLoaderClickListener{
 ```
 
 
+</p>
+</p>
 ##### 3. 单类型，多类型功能
 
-* 1)单类型使用
+* 1.单类型使用
 ```
 class SingleTypeAdapter(context: Context, list: ArrayList<T>) : CommonAdapter<T>(context, layout, list) {
     override fun convert(holder: BaseViewHolder, t: T, position: Int) {
@@ -117,7 +120,7 @@ class SingleTypeAdapter(context: Context, list: ArrayList<T>) : CommonAdapter<T>
 }
 ```
 
-* 2)多类型 [item位置不确定,类似聊天页面]
+* 2.多类型 [item位置不确定,类似聊天页面]
 ```
 1.继承ItemViewDelegate<T>,实现当前类型item的视图功能
 class MultiModelDelegate:ItemViewDelegate<ModelBean>(){
@@ -143,7 +146,7 @@ class MultiItemAdapter(context: Context, list: List<ModelBean>) : MultiItemTypeA
 recycler_view.adapter = MultiItemAdapter(context, list)
 ```
 
-* 3)多类型 [item位置确定，并且页面由几个接口组成，类似app首页]
+* 3.多类型 [item位置确定，并且页面由几个接口组成，类似app首页]
 ```
 1.继承ItemClassifyDelegate,实现当前类型item的视图功能
 class ClassifyMsgDelegate(private val presenter: IClassifyPresenter) : ItemClassifyDelegate() {
@@ -200,6 +203,6 @@ etc.
 
 [hongyangAndroid大大](https://github.com/hongyangAndroid/baseAdapter)
 
-还有我的小伙伴[小太阳](https://github.com/juicy-zx)
+我的小伙伴[小太阳](https://github.com/juicy-zx)
 
 #### 如果你喜欢本项目，请点个✨哦~
