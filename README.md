@@ -215,7 +215,7 @@ class GridSpanDelegate : ItemViewDelegate<ModelBean>() {
 etc.
 
 ### 更丰富的刷新、加载效果 
-请结合[SimpleRefreshLayout](https://github.com/dengzq/SimpleRefreshLayout)实现或查看demo;
+请结合[SimpleRefreshLayout](https://github.com/dengzq/SimpleRefreshLayout)实现或查看[demo](https://www.pgyer.com/Eot4);
 
 ### 特别感谢
 
