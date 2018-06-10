@@ -194,8 +194,10 @@ class GridSpanDelegate : ItemViewDelegate<ModelBean>() {
 }
 ```
 
-<font size=20>更丰富的 刷新、load more和 no more 效果 请结合</br></font size>
+</p>
+更丰富的 刷新、load more和 no more 效果 请结合</br>
 [SimpleRefreshLayout](https://github.com/dengzq/SimpleRefreshLayout)实现或查看demo;
+</p>
 
 ### Todo list
 
