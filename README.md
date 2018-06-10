@@ -8,7 +8,7 @@
 
 ### demo演示
 
-![headerAndFooter.gif](https://github.com/dengzq/BaseRecyclerViewAdapter/tree/master/image/img_header.gif)
+![headerAndFooter.gif](https://github.com/dengzq/BaseRecyclerViewAdapter/blob/master/image/img_header.gif)
 
 ![loader.gif](https://github.com/dengzq/BaseRecyclerViewAdapter/tree/master/image/img_loader.gif)
 
