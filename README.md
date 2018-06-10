@@ -208,7 +208,7 @@ etc.
 
 ### 特别感谢
 
-[hongyangAndroid大大](https://github.com/hongyangAndroid/baseAdapter)</br>
-我的小伙伴[小太阳](https://github.com/juicy-zx)
+[hongyangAndroid](https://github.com/hongyangAndroid/baseAdapter)</br>
+[我的小伙伴小太阳](https://github.com/juicy-zx)
 
 #### 如果你喜欢本项目，请点个✨哦~
