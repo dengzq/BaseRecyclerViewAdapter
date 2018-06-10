@@ -194,7 +194,7 @@ class GridSpanDelegate : ItemViewDelegate<ModelBean>() {
 }
 ```
 
-<font size=20>更丰富的 刷新、load more和 no more 效果 请结合</font size></br>
+<font size=20>更丰富的 刷新、load more和 no more 效果 请结合</br></font size>
 [SimpleRefreshLayout](https://github.com/dengzq/SimpleRefreshLayout)实现或查看demo;
 
 ### Todo list
@@ -206,8 +206,7 @@ etc.
 
 ### 特别感谢
 
-[hongyangAndroid大大](https://github.com/hongyangAndroid/baseAdapter)
-
+[hongyangAndroid大大](https://github.com/hongyangAndroid/baseAdapter)</br>
 我的小伙伴[小太阳](https://github.com/juicy-zx)
 
 #### 如果你喜欢本项目，请点个✨哦~
