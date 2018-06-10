@@ -8,9 +8,7 @@
 
 ### demo演示
 
-<img width="188" height="314" src="https://github.com/dengzq/BaseRecyclerViewAdapter/blob/master/image/img_header.gif" alt="HeaderAndFooter"/>
-<img width="188" height="314" src="https://github.com/dengzq/BaseRecyclerViewAdapter/blob/master/image/img_loader.gif" alt="Loader"/>
-<img width="188" height="314" src="https://github.com/dengzq/BaseRecyclerViewAdapter/blob/master/image/img_single.gif" alt="SingleItem"/>
+<img width="188" height="314" src="https://github.com/dengzq/BaseRecyclerViewAdapter/blob/master/image/img_header.gif" alt="HeaderAndFooter"/><img width="188" height="314" src="https://github.com/dengzq/BaseRecyclerViewAdapter/blob/master/image/img_loader.gif" alt="Loader"/><img width="188" height="314" src="https://github.com/dengzq/BaseRecyclerViewAdapter/blob/master/image/img_single.gif" alt="SingleItem"/>
 
 <img width="188" height="314" src="https://github.com/dengzq/BaseRecyclerViewAdapter/blob/master/image/img_multi_item.gif" alt="MultiItem"/>
 <img width="188" height="314" src="https://github.com/dengzq/BaseRecyclerViewAdapter/blob/master/image/img_multi_classify.gif" alt="MultiClassify"/>
