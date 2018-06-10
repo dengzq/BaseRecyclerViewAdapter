@@ -108,6 +108,19 @@ adapter.loaderClickListener=object :OnLoaderClickListener{
         }
 ```
 
+##### No More展示
+
+```
+1.添加BottomView
+adapter.addBottomView(view)
+
+2.无更多时，请调用
+adapter.isHasMore(false)
+
+3.刷新数据时，请重置isHasMore状态
+adapter.isHasMore(true)
+```
+
 
 </p>
 </p>
