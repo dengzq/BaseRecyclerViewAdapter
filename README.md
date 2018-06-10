@@ -35,7 +35,7 @@ compile 'com.dengzq.widget:baservadapter:0.7.0'
 
 #### 基本使用
 
-##### 1. HeaderAndFooter
+##### 一. HeaderAndFooter
 
 ```
 val header = layoutInflater.inflate(R.layout.layout_header, recycler_view, false)
@@ -55,9 +55,9 @@ adapter.removeFooter(key)
 
 </p>
 
-##### 2.loadMore And No more
+##### 二.loadMore And No more
 
-###### 一. 设置loadMoreView,继承ILoaderView 接口
+###### 1. 设置loadMoreView,继承ILoaderView 接口
 ```
 class LoaderView : ILoaderView {
 
@@ -67,7 +67,7 @@ class LoaderView : ILoaderView {
 }
 ```
 
-###### 二. 添加loaderView
+###### 2. 添加loaderView
 ```
 val loader = LoaderView()
 adapter.addLoaderView(loader)
@@ -76,7 +76,7 @@ adapter.addLoaderView(loader)
 //adapter.removeLoaderView() or adapter.openLoadMore(false)
 ```
 
-* 3. 加载更多回调
+###### 3. 加载更多回调
 ```
 adapter.loadMoreListener = object : OnLoadMoreListener {
             override fun onLoadMore() {
@@ -92,7 +92,7 @@ adapter.loadMoreSuccess() //loadMore success
 adapter.loadMoreFail()    //loadMore fail, show load error layout if it's exist;
 ```
 
-* 4. 关于autoLoad,加载失败
+###### 4. 关于autoLoad,加载失败
 
 默认情况下，开启的是loader autoLoad方式，如果需要点击加载ClickLoad
 ```
@@ -114,9 +114,9 @@ adapter.loaderClickListener=object :OnLoaderClickListener{
 </p>
 </p>
 
-##### 3. 单类型，多类型功能
+##### 三. 单类型，多类型功能
 
-* 1. 单类型使用
+###### 1. 单类型使用
 ```
 class SingleTypeAdapter(context: Context, list: ArrayList<T>) : CommonAdapter<T>(context, layout, list) {
     override fun convert(holder: BaseViewHolder, t: T, position: Int) {
@@ -125,7 +125,7 @@ class SingleTypeAdapter(context: Context, list: ArrayList<T>) : CommonAdapter<T>
 }
 ```
 
-* 2. 多类型 [item位置不确定,类似聊天页面]
+###### 2. 多类型 [item位置不确定,类似聊天页面]
 ```
 1.继承ItemViewDelegate<T>,实现当前类型item的视图功能
 class MultiModelDelegate:ItemViewDelegate<ModelBean>(){
@@ -151,7 +151,7 @@ class MultiItemAdapter(context: Context, list: List<ModelBean>) : MultiItemTypeA
 recycler_view.adapter = MultiItemAdapter(context, list)
 ```
 
-* 3. 多类型 [item位置确定，并且页面由几个接口组成，类似app首页]
+###### 3. 多类型 [item位置确定，并且页面由几个接口组成，类似app首页]
 ```
 1.继承ItemClassifyDelegate,实现当前类型item的视图功能
 class ClassifyMsgDelegate(private val presenter: IClassifyPresenter) : ItemClassifyDelegate() {
@@ -177,7 +177,7 @@ class ClassifyAdapter(context: Context, presenter: IClassifyPresenter) : MultiIt
 recycler_view.adapter = ClassifyAdapter(activity!!, presenter)
 ```
 
-##### 4.Item间不同的spanSize
+##### 四.Item间不同的spanSize
 ```
 //只需要让delegate重写getItemSpanSize(position: Int)方法，GridLayoutManager会获取到该
 //span size改变布局;
@@ -194,7 +194,7 @@ class GridSpanDelegate : ItemViewDelegate<ModelBean>() {
 }
 ```
 
-##### 5.更丰富的 刷新、load more和 no more 效果 请结合</br>[SimpleRefreshLayout](https://github.com/dengzq/SimpleRefreshLayout)实现或查看demo;
+### 更丰富的 刷新、load more和 no more 效果 请结合</br>[SimpleRefreshLayout](https://github.com/dengzq/SimpleRefreshLayout)实现或查看demo;
 
 ### Todo list
 
