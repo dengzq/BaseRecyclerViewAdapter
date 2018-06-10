@@ -8,16 +8,13 @@
 
 ### demo演示
 
-<img width="150" height="150" src="https://github.com/dengzq/BaseRecyclerViewAdapter/blob/master/image/img_header.gif"/>
+<img width="188" height="314" src="https://github.com/dengzq/BaseRecyclerViewAdapter/blob/master/image/img_header.gif" alt="HeaderAndFooter"/>
+<img width="188" height="314" src="https://github.com/dengzq/BaseRecyclerViewAdapter/blob/master/image/img_loader.gif" alt="Loader"/>
+<img width="188" height="314" src="https://github.com/dengzq/BaseRecyclerViewAdapter/blob/master/image/img_single.gif" alt="SingleItem"/>
 
-![headerAndFooter.gif](https://github.com/dengzq/BaseRecyclerViewAdapter/blob/master/image/img_header.gif)
-![loader.gif](https://github.com/dengzq/BaseRecyclerViewAdapter/blob/master/image/img_loader.gif)
-![singleItem.gif](https://github.com/dengzq/BaseRecyclerViewAdapter/blob/master/image/img_single.gif)
-
-![multiItem.gif](https://github.com/dengzq/BaseRecyclerViewAdapter/blob/master/image/img_multi_item.gif)
-![multiClassify.gif](https://github.com/dengzq/BaseRecyclerViewAdapter/blob/master/image/img_multi_classify.gif)
-![spanSize.gif](https://github.com/dengzq/BaseRecyclerViewAdapter/blob/master/image/img_span_size.gif)
-
+<img width="188" height="314" src="https://github.com/dengzq/BaseRecyclerViewAdapter/blob/master/image/img_multi_item.gif" alt="MultiItem"/>
+<img width="188" height="314" src="https://github.com/dengzq/BaseRecyclerViewAdapter/blob/master/image/img_multi_classify.gif" alt="MultiClassify"/>
+<img width="188" height="314" src="https://github.com/dengzq/BaseRecyclerViewAdapter/blob/master/image/img_span_size.gif" alt="SpanSize"/>
 
 ### 使用
 
