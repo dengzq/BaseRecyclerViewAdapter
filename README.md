@@ -45,7 +45,7 @@ compile 'com.dengzq.widget:baservadapter:0.7.0'
 val header = layoutInflater.inflate(R.layout.layout_header, recycler_view, false)
 adapter.addHeaderView(header)
 
-如果需要在某些情况下移除header，请给在添加时绑定一个key
+如果需要在某些情况下移除header，请在添加时绑定一个key
 add : adapter.addHeaderView(key,header)
 remove: adapter.removeHeader(key)
 
@@ -84,7 +84,7 @@ adapter.addLoaderView(loader)
 ```
 adapter.loadMoreListener = object : OnLoadMoreListener {
             override fun onLoadMore() {
-               //do what you what to add data here;
+               //do what you want to add data here;
             }
         }
 ```
@@ -98,7 +98,10 @@ adapter.loadMoreFail()    //loadMore fail, show load error layout if it's exist;
 
 ###### 4. 关于autoLoad,加载失败
 
-默认情况下，开启的是loader autoLoad方式，如果需要点击加载ClickLoad
+1)默认情况下，加载更多使用`自动加载`方式，如果需要`点击加载`的方式，请通过loader的点击事件实现;</br>
+2)加载失败调用adapter.loadMorefail()会展示加载失败视图，可以通过loader点击事件实现重新请求;
+特别的，adapter.goReloading()会重新回调onLoadMoreListener 实现重新请求，如果你的请求没有写在onLoadMoreListener,
+请在state==LoadState.ERROR内实现 重新请求逻辑.
 ```
 adapter.autoLoadMore(false)
 adapter.loaderClickListener=object :OnLoaderClickListener{
@@ -107,7 +110,7 @@ adapter.loaderClickListener=object :OnLoaderClickListener{
                     //Click to loadMore data here;
                 }
                 else if (state==LoadState.ERROR){
-                    //error layout was clicked, reload data;
+                    //error layout was clicked, reload data; 
                     adapter.goReloading()
                 }
             }
@@ -118,7 +121,7 @@ adapter.loaderClickListener=object :OnLoaderClickListener{
 </p>
 </p>
 
-##### 三. 单类型，多类型功能
+##### 三. 单类型，多类型列表
 
 ###### 1. 单类型使用
 ```
@@ -129,7 +132,7 @@ class SingleTypeAdapter(context: Context, list: ArrayList<T>) : CommonAdapter<T>
 }
 ```
 
-###### 2. 多类型 [item位置不确定,类似聊天页面]
+###### 2. 多类型 带泛型 
 ```
 1).继承ItemViewDelegate<T>,实现当前类型item的视图功能
 class MultiModelDelegate:ItemViewDelegate<ModelBean>(){
@@ -155,7 +158,7 @@ class MultiItemAdapter(context: Context, list: List<ModelBean>) : MultiItemTypeA
 recycler_view.adapter = MultiItemAdapter(context, list)
 ```
 
-###### 3. 多类型 [item位置确定，并且页面由几个接口组成，类似app首页]
+###### 3. 多类型 不带泛型 
 ```
 1).继承ItemClassifyDelegate,实现当前类型item的视图功能
 class ClassifyMsgDelegate(private val presenter: IClassifyPresenter) : ItemClassifyDelegate() {
