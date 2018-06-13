@@ -81,23 +81,23 @@ abstract class BaseRvAdapter(val context: Context) : RecyclerView.Adapter<BaseVi
         when {
             hfHelper.getHeaderView(viewType) != null -> {
                 holder = BaseViewHolder.createViewHolder(context, hfHelper.getHeaderView(viewType)!!)
-                setHeaderClickListener(holder, viewType)
+                setOnHeaderClickListener(holder, viewType)
             }
             hfHelper.getFooterView(viewType) != null -> {
                 holder = BaseViewHolder.createViewHolder(context, hfHelper.getFooterView(viewType)!!)
-                setFooterClickListener(holder, viewType)
+                setOnFooterClickListener(holder, viewType)
             }
             loadHelper.getLoadMoreViewType() == viewType -> {
                 holder = BaseViewHolder.createViewHolder(context, loadHelper.getLoadMoreView())
-                setLoaderClickListener(holder)
+                setOnLoaderClickListener(holder)
             }
             btmHelper.getBottomViewType() == viewType -> {
                 holder = BaseViewHolder.createViewHolder(context, btmHelper.getBottomView()!!)
-                setBottomClickListener(holder)
+                setOnBottomClickListener(holder)
             }
             else -> {
                 holder = createRealHolder(parent, viewType)
-                setItemClickListener(holder)
+                setOnItemClickListener(holder)
             }
         }
         return holder
@@ -132,36 +132,36 @@ abstract class BaseRvAdapter(val context: Context) : RecyclerView.Adapter<BaseVi
 
     }
 
-    private fun setBottomClickListener(holder: BaseViewHolder) {
+    private fun setOnBottomClickListener(holder: BaseViewHolder) {
         holder.getConvertView().setOnClickListener {
             bottomClickListener?.onItemClick(it, holder, holder.adapterPosition)
         }
     }
 
-    private fun setLoaderClickListener(holder: BaseViewHolder) {
+    private fun setOnLoaderClickListener(holder: BaseViewHolder) {
         holder.getConvertView().setOnClickListener {
             loaderClickListener?.onItemClick(it, holder, loadHelper.state)
         }
     }
 
-    private fun setHeaderClickListener(holder: BaseViewHolder, viewType: Int) {
+    private fun setOnHeaderClickListener(holder: BaseViewHolder, viewType: Int) {
         holder.getConvertView().setOnClickListener {
             headerClickListener?.onHeaderClick(it, holder, hfHelper.getHeaderKey(viewType))
         }
     }
 
-    private fun setFooterClickListener(holder: BaseViewHolder, viewType: Int) {
+    private fun setOnFooterClickListener(holder: BaseViewHolder, viewType: Int) {
         holder.getConvertView().setOnClickListener {
             footerClickListener?.onFooterClick(it, holder, hfHelper.getFooterKey(viewType))
         }
     }
 
-    private fun setItemClickListener(holder: BaseViewHolder) {
+    private fun setOnItemClickListener(holder: BaseViewHolder) {
         holder.getConvertView().setOnClickListener {
-            itemClickListener?.onItemClick(it, holder, holder.adapterPosition)
+            itemClickListener?.onItemClick(it, holder, holder.adapterPosition-hfHelper.getHeaderCount())
         }
         holder.getConvertView().setOnLongClickListener {
-            itemLongClickListener?.onItemLongClick(it, holder, holder.adapterPosition)
+            itemLongClickListener?.onItemLongClick(it, holder, holder.adapterPosition-hfHelper.getHeaderCount())
             itemLongClickListener != null
         }
     }
