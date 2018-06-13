@@ -8,18 +8,9 @@
 
 ### demo演示
 
-![headerAndFooter.gif](https://github.com/dengzq/BaseRecyclerViewAdapter/tree/master/image/img_header.gif)
+<img width="282" height="471" src="https://github.com/dengzq/BaseRecyclerViewAdapter/blob/master/image/img_header.gif" alt="HeaderAndFooter"/><img width="282" height="471" src="https://github.com/dengzq/BaseRecyclerViewAdapter/blob/master/image/img_loader.gif" alt="Loader"/><img width="282" height="471" src="https://github.com/dengzq/BaseRecyclerViewAdapter/blob/master/image/img_single.gif" alt="SingleItem"/>
 
-![loader.gif](https://github.com/dengzq/BaseRecyclerViewAdapter/tree/master/image/img_loader.gif)
-
-![singleItem.gif](https://github.com/dengzq/BaseRecyclerViewAdapter/tree/master/image/img_single.gif)
-
-![multiItem.gif](https://github.com/dengzq/BaseRecyclerViewAdapter/tree/master/image/img_multi_item.gif)
-
-![multiClassify.gif](https://github.com/dengzq/BaseRecyclerViewAdapter/tree/master/image/img_multi_classify.gif)
-
-![spanSize.gif](https://github.com/dengzq/BaseRecyclerViewAdapter/tree/master/image/img_span_size.gif)
-
+<img width="282" height="471" src="https://github.com/dengzq/BaseRecyclerViewAdapter/blob/master/image/img_multi_item.gif" alt="MultiItem"/><img width="282" height="471" src="https://github.com/dengzq/BaseRecyclerViewAdapter/blob/master/image/img_multi_classify.gif" alt="MultiClassify"/><img width="282" height="471" src="https://github.com/dengzq/BaseRecyclerViewAdapter/blob/master/image/img_span_size.gif" alt="SpanSize"/>
 
 ### 使用
 
@@ -117,6 +108,19 @@ adapter.loaderClickListener=object :OnLoaderClickListener{
         }
 ```
 
+###### 5.No More展示
+
+```
+1.添加BottomView
+adapter.addBottomView(view)
+
+2.无更多时，请调用
+adapter.isHasMore(false)
+
+3.刷新数据时，请重置isHasMore状态
+adapter.isHasMore(true)
+```
+
 
 </p>
 </p>
@@ -211,7 +215,7 @@ class GridSpanDelegate : ItemViewDelegate<ModelBean>() {
 etc.
 
 ### 更丰富的刷新、加载效果 
-请结合[SimpleRefreshLayout](https://github.com/dengzq/SimpleRefreshLayout)实现或查看demo;
+请结合[SimpleRefreshLayout](https://github.com/dengzq/SimpleRefreshLayout)实现或查看[demo](https://www.pgyer.com/Eot4);
 
 ### 特别感谢
 
