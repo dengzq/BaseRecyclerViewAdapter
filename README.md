@@ -16,7 +16,7 @@
 
 #### Gradle
 ```
-compile 'com.dengzq.widget:baservadapter:0.7.0'
+compile 'com.dengzq.widget:baservadapter:0.7.1'
 ```
 #### Maven
 ```
