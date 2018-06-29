@@ -60,12 +60,12 @@ class HeaderAndFooterFragment : Fragment() {
         val footer = layoutInflater.inflate(R.layout.layout_footer, recycler_view, false)
         adapter.addFooterView("footer1", footer)
 
-        adapter.itemClickListener = object : OnItemClickListener {
+        adapter.onItemClickListener = object : OnItemClickListener {
             override fun onItemClick(v: View, holder: BaseViewHolder, position: Int) {
                 Toast.makeText(activity, "Click item $position", Toast.LENGTH_SHORT).show()
             }
         }
-        adapter.headerClickListener = object : OnHeaderClickListener {
+        adapter.onHeaderClickListener = object : OnHeaderClickListener {
             override fun onHeaderClick(v: View, holder: BaseViewHolder, key: String) {
 
                 if (key != "header2" && key != "header1") {
@@ -86,7 +86,7 @@ class HeaderAndFooterFragment : Fragment() {
             }
         }
 
-        adapter.footerClickListener = object : OnFooterClickListener {
+        adapter.onFooterClickListener = object : OnFooterClickListener {
             override fun onFooterClick(v: View, holder: BaseViewHolder, key: String) {
 
                 if (key == "footer1") {

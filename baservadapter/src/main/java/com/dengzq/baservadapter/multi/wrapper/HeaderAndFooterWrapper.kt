@@ -62,7 +62,11 @@ internal class HeaderAndFooterWrapper {
     }
 
     private fun buildViewType(source: ArrayList<InfoObj>): Int {
-        val viewType = (Math.random() * BaseRvAdapter.FOOTER_INDEX).toInt()
+        val viewType = if (source == headerObjs) {
+            (Math.random() * BaseRvAdapter.FOOTER_INDEX).toInt()
+        } else {
+            (Math.random() * BaseRvAdapter.FOOTER_INDEX).toInt() + BaseRvAdapter.FOOTER_INDEX
+        }
         if (checkViewTypeExist(viewType, source)) {
             return buildViewType(source)
         }

@@ -12,6 +12,7 @@ import android.view.ViewGroup
 import android.widget.CheckBox
 import com.dengzq.baservadapter.listener.OnLoadMoreListener
 import com.dengzq.demo.R
+import com.dengzq.demo.model.ModelBean
 import com.dengzq.demo.service.ModelService
 import com.dengzq.demo.widget.LoaderView
 import com.dengzq.demo.widget.SimpleBottom
@@ -51,7 +52,7 @@ class LoadAndBottomFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
 
-        val list = ModelService.getModelBeanList(10)
+        val list = ArrayList<ModelBean>()
         val adapter = MultiItemAdapter(activity!!, list)
         recycler_view.layoutManager = LinearLayoutManager(activity)
         recycler_view.adapter = adapter
@@ -133,7 +134,7 @@ class LoadAndBottomFragment : Fragment() {
             }
         })
         //设置adapter load more
-        adapter.loadMoreListener = object : OnLoadMoreListener {
+        adapter.onLoadMoreListener = object : OnLoadMoreListener {
             override fun onLoadMore() {
                 Handler().postDelayed({
 
@@ -156,5 +157,7 @@ class LoadAndBottomFragment : Fragment() {
         adapter_load.isChecked = true
         adapter_bottom.isChecked = true
 
+
+        list.addAll(ModelService.getModelBeanList(10))
     }
 }

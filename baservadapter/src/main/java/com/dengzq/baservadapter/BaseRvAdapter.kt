@@ -4,6 +4,7 @@ package com.dengzq.baservadapter
 
 import android.content.Context
 import android.support.v7.widget.GridLayoutManager
+import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.StaggeredGridLayoutManager
 import android.view.View
@@ -45,13 +46,13 @@ abstract class BaseRvAdapter(val context: Context) : RecyclerView.Adapter<BaseVi
 
     private lateinit var recyclerView: RecyclerView
 
-    var itemClickListener: OnItemClickListener? = null
-    var itemLongClickListener: OnItemLongClickListener? = null
-    var headerClickListener: OnHeaderClickListener? = null
-    var footerClickListener: OnFooterClickListener? = null
-    var loaderClickListener: OnLoaderClickListener? = null
-    var bottomClickListener: OnBottomClickListener? = null
-    var loadMoreListener: OnLoadMoreListener? = null
+    var onItemClickListener: OnItemClickListener? = null
+    var onItemLongClickListener: OnItemLongClickListener? = null
+    var onHeaderClickListener: OnHeaderClickListener? = null
+    var onFooterClickListener: OnFooterClickListener? = null
+    var onLoaderClickListener: OnLoaderClickListener? = null
+    var onBottomClickListener: OnBottomClickListener? = null
+    var onLoadMoreListener: OnLoadMoreListener? = null
 
     protected abstract fun getRealSpanSize(position: Int): Int
     protected abstract fun getRealItemCount(): Int
@@ -100,32 +101,17 @@ abstract class BaseRvAdapter(val context: Context) : RecyclerView.Adapter<BaseVi
                 setOnItemClickListener(holder)
             }
         }
+
         return holder
     }
 
     override fun onBindViewHolder(holder: BaseViewHolder, position: Int) {
+
         when {
             isHeaderPosition(position) || isFooterPosition(position)
                     || isBottomPosition(position) -> return
 
-            isLoaderPosition(position) -> {
-                if (loadHelper.state != LoadState.ERROR) {
-                    if (loadHelper.hasMore && (canRvLoadVertically() || canRvLoadHorizontally())) {
-
-                        loadHelper.notifyStateChanged(LoadState.LOADING)
-
-                        //When autoLoad is true ,auto load by loadMoreListener;
-                        //When autoLoad is false,click to load by loaderClickListener;
-                        if (loadHelper.autoLoad) {
-                            recyclerView.post({ loadMoreListener?.onLoadMore() })
-                        }
-                    } else {
-                        //Not match recyclerView's totalHeight,hide loader;
-                        loadHelper.hasMore = false
-                        loadHelper.notifyStateChanged(LoadState.NORMAL)
-                    }
-                }
-            }
+            isLoaderPosition(position) -> autoLoadMore()
 
             else -> bindRealHolder(holder, position - hfHelper.getHeaderCount())
         }
@@ -134,35 +120,35 @@ abstract class BaseRvAdapter(val context: Context) : RecyclerView.Adapter<BaseVi
 
     private fun setOnBottomClickListener(holder: BaseViewHolder) {
         holder.getConvertView().setOnClickListener {
-            bottomClickListener?.onItemClick(it, holder, holder.adapterPosition)
+            onBottomClickListener?.onItemClick(it, holder, holder.adapterPosition)
         }
     }
 
     private fun setOnLoaderClickListener(holder: BaseViewHolder) {
         holder.getConvertView().setOnClickListener {
-            loaderClickListener?.onItemClick(it, holder, loadHelper.state)
+            onLoaderClickListener?.onItemClick(it, holder, loadHelper.state)
         }
     }
 
     private fun setOnHeaderClickListener(holder: BaseViewHolder, viewType: Int) {
         holder.getConvertView().setOnClickListener {
-            headerClickListener?.onHeaderClick(it, holder, hfHelper.getHeaderKey(viewType))
+            onHeaderClickListener?.onHeaderClick(it, holder, hfHelper.getHeaderKey(viewType))
         }
     }
 
     private fun setOnFooterClickListener(holder: BaseViewHolder, viewType: Int) {
         holder.getConvertView().setOnClickListener {
-            footerClickListener?.onFooterClick(it, holder, hfHelper.getFooterKey(viewType))
+            onFooterClickListener?.onFooterClick(it, holder, hfHelper.getFooterKey(viewType))
         }
     }
 
     private fun setOnItemClickListener(holder: BaseViewHolder) {
         holder.getConvertView().setOnClickListener {
-            itemClickListener?.onItemClick(it, holder, holder.adapterPosition-hfHelper.getHeaderCount())
+            onItemClickListener?.onItemClick(it, holder, holder.adapterPosition - hfHelper.getHeaderCount())
         }
         holder.getConvertView().setOnLongClickListener {
-            itemLongClickListener?.onItemLongClick(it, holder, holder.adapterPosition-hfHelper.getHeaderCount())
-            itemLongClickListener != null
+            onItemLongClickListener?.onItemLongClick(it, holder, holder.adapterPosition - hfHelper.getHeaderCount())
+            onItemLongClickListener != null
         }
     }
 
@@ -171,7 +157,7 @@ abstract class BaseRvAdapter(val context: Context) : RecyclerView.Adapter<BaseVi
     private fun isFooterPosition(position: Int): Boolean = hfHelper.getFooterCount() > 0 && position >= hfHelper.getHeaderCount() + getRealItemCount()
             && position < hfHelper.getHeaderCount() + hfHelper.getFooterCount() + getRealItemCount()
 
-    private fun isLoaderPosition(position: Int): Boolean = getLoaderCount() > 0 && position == hfHelper.getHeaderCount() + hfHelper.getFooterCount() + getRealItemCount()
+    private fun isLoaderPosition(position: Int): Boolean = getLoaderCount() > 0 && position > 0 && position == hfHelper.getHeaderCount() + hfHelper.getFooterCount() + getRealItemCount()
 
     private fun isBottomPosition(position: Int): Boolean = getBottomCount() > 0 && position == hfHelper.getHeaderCount() + hfHelper.getFooterCount() +
             getRealItemCount()
@@ -183,18 +169,61 @@ abstract class BaseRvAdapter(val context: Context) : RecyclerView.Adapter<BaseVi
     private fun canShowBottom(): Boolean = !loadHelper.hasMore
 
     /**
-     * check if it is vertical scroll
-     * check if content's height is larger than rv's height
+     * Auto load more data;
+     * If you already set onLoadMoreListener, remember to invoke loadSuccess or
+     * loadFailed to end loadMore event;
      */
-    private fun canRvLoadVertically(): Boolean = recyclerView.scrollState != RecyclerView.SCROLL_STATE_IDLE
-            && recyclerView.computeVerticalScrollRange() > recyclerView.measuredHeight + loadHelper.getLoadMoreView().layoutParams.height
+    private fun autoLoadMore() {
+        //No content, hide loader;
+        if (getHeaderCount() + getFooterCount() + getRealItemCount() <= 0) {
+            loadHelper.notifyStateChanged(LoadState.NORMAL)
+            return
+        }
+        //Loading ,return;
+        if (loadHelper.state == LoadState.LOADING) return
+
+        //Auto load More;
+        if (loadHelper.hasMore && isContentMoreThanOnePage()) {
+            loadHelper.notifyStateChanged(LoadState.LOADING)
+
+            //Auto load by loadMoreLis, or click to load by loadClickLis;
+            if (loadHelper.autoLoad) {
+                recyclerView.post({ onLoadMoreListener?.onLoadMore() })
+            }
+        } else {
+            //Not match recyclerView's totalHeight, hide loader;
+            loadHelper.hasMore = false
+            loadHelper.notifyStateChanged(LoadState.NORMAL)
+        }
+    }
 
     /**
-     * check if it is horizontal scroll
-     * check if content's width is larger than rv's width
+     * whether recyclerView already shows all content;
+     * @return true if rv's content is more than one page,means that we can show loader if hasMore;
+     * false otherwise;
      */
-    private fun canRvLoadHorizontally(): Boolean = recyclerView.scrollState != RecyclerView.SCROLL_STATE_IDLE
-            && recyclerView.computeHorizontalScrollRange() > recyclerView.measuredWidth + loadHelper.getLoadMoreView().layoutParams.width
+    private fun isContentMoreThanOnePage(): Boolean {
+
+        val moreThanOnePage = false
+
+        val layoutManager = recyclerView.layoutManager
+
+        if (layoutManager is LinearLayoutManager) {
+
+            val lastCompletePos = layoutManager.findLastCompletelyVisibleItemPosition()
+            moreThanOnePage != lastCompletePos >= (layoutManager.childCount - 1)
+                    && layoutManager.childCount == (layoutManager.itemCount - getLoaderCount() - getBottomCount())
+
+        } else if (layoutManager is StaggeredGridLayoutManager) {
+
+            val intArray = layoutManager.findLastCompletelyVisibleItemPositions(null)
+            moreThanOnePage != intArray[intArray.size - 1] >= (layoutManager.childCount - 1)
+                    && layoutManager.childCount == (layoutManager.itemCount - getLoaderCount() - getBottomCount())
+        }
+
+        return (moreThanOnePage && recyclerView.scrollState == RecyclerView.SCROLL_STATE_IDLE) ||
+                recyclerView.scrollState != RecyclerView.SCROLL_STATE_IDLE
+    }
 
     /**
      * Reset span size for GridLayoutManager;
@@ -290,6 +319,10 @@ abstract class BaseRvAdapter(val context: Context) : RecyclerView.Adapter<BaseVi
         loadHelper.removeLoaderView()
     }
 
+    fun getLoadingLayout(): View? = loadHelper.getLoadingView()
+
+    fun getLoadErrLayout(): View? = loadHelper.getLoadErrView()
+
     fun autoLoadMore(auto: Boolean) {
         loadHelper.autoLoad = auto
     }
@@ -309,7 +342,7 @@ abstract class BaseRvAdapter(val context: Context) : RecyclerView.Adapter<BaseVi
 
     fun goReloading() {
         loadHelper.notifyStateChanged(LoadState.LOADING)
-        loadMoreListener?.onLoadMore()
+        onLoadMoreListener?.onLoadMore()
     }
 
     fun isHasMore(hasMore: Boolean) {

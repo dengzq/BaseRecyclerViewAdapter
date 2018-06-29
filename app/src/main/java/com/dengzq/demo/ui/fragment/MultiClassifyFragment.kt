@@ -65,7 +65,7 @@ class MultiClassifyFragment : Fragment(), IClassifyView {
         adapter = ClassifyAdapter(activity!!, presenter)
         recycler_view.layoutManager = GridLayoutManager(activity, 4)
         recycler_view.adapter = adapter
-        adapter.itemClickListener = object : OnItemClickListener {
+        adapter.onItemClickListener = object : OnItemClickListener {
             override fun onItemClick(v: View, holder: BaseViewHolder, position: Int) {
                 Toast.makeText(activity, "item $position is clicked !", Toast.LENGTH_SHORT).show()
             }

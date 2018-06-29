@@ -59,14 +59,14 @@ class SingleFragment : Fragment() {
         val bottom = layoutInflater.inflate(R.layout.layout_bottom, recycler_view, false)
         adapter.addBottomView(bottom)
 
-        //set itemClickListener;
-        adapter.itemClickListener = object : OnItemClickListener {
+        //set onItemClickListener;
+        adapter.onItemClickListener = object : OnItemClickListener {
             override fun onItemClick(v: View, holder: BaseViewHolder, position: Int) {
                 Toast.makeText(context, "click item $position !!", Toast.LENGTH_SHORT).show()
             }
         }
-        //set loadMoreListener;
-        adapter.loadMoreListener = object : OnLoadMoreListener {
+        //set onLoadMoreListener;
+        adapter.onLoadMoreListener = object : OnLoadMoreListener {
             override fun onLoadMore() {
                 Handler().postDelayed({
 
