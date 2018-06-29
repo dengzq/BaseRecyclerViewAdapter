@@ -58,7 +58,6 @@ class LoadAndBottomFragment : Fragment() {
         recycler_view.adapter = adapter
 
         simple_refresh.setPullUpEnable(false)
-        simple_refresh.setEffectivePullUpRange(200)
         simple_refresh.headerView = SimpleRefresh(activity!!)
 
         //set adapter loader
