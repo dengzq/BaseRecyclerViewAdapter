@@ -23,7 +23,7 @@ compile 'com.dengzq.widget:baservadapter:0.7.7'
 <dependency>
   <groupId>com.dengzq.widget</groupId>
   <artifactId>baservadapter</artifactId>
-  <version>0.7.5</version>
+  <version>0.7.7</version>
   <type>pom</type>
 </dependency>
 ```
