@@ -157,7 +157,7 @@ abstract class BaseRvAdapter(val context: Context) : RecyclerView.Adapter<BaseVi
     private fun isFooterPosition(position: Int): Boolean = hfHelper.getFooterCount() > 0 && position >= hfHelper.getHeaderCount() + getRealItemCount()
             && position < hfHelper.getHeaderCount() + hfHelper.getFooterCount() + getRealItemCount()
 
-    private fun isLoaderPosition(position: Int): Boolean = getLoaderCount() > 0 && position > 0 && position == hfHelper.getHeaderCount() + hfHelper.getFooterCount() + getRealItemCount()
+    private fun isLoaderPosition(position: Int): Boolean = getLoaderCount() > 0 && position == hfHelper.getHeaderCount() + hfHelper.getFooterCount() + getRealItemCount()
 
     private fun isBottomPosition(position: Int): Boolean = getBottomCount() > 0 && position == hfHelper.getHeaderCount() + hfHelper.getFooterCount() +
             getRealItemCount()

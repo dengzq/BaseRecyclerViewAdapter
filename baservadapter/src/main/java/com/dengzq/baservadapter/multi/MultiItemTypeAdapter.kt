@@ -20,8 +20,9 @@ abstract class MultiItemTypeAdapter<T>(context: Context, val list: List<T>) : Ba
 
     override fun getRealItemCount(): Int = list.size
 
-    override fun getRealViewType(position: Int): Int =
-            delegateManager.getItemViewType(list[position], position).takeIf { list.isNotEmpty() } ?: 0
+    override fun getRealViewType(position: Int): Int {
+        return delegateManager.getItemViewType(list[position], position)
+    }
 
     override fun createRealHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
         val delegate = delegateManager.getItemViewDelegate(viewType)
@@ -29,7 +30,7 @@ abstract class MultiItemTypeAdapter<T>(context: Context, val list: List<T>) : Ba
     }
 
     override fun bindRealHolder(holder: BaseViewHolder, position: Int) {
-        delegateManager.convert(holder, list[position], position).takeIf { list.isNotEmpty() } ?: return
+        delegateManager.convert(holder, list[position], position)
     }
 
     fun addItemViewDelegate(delegate: ItemViewDelegate<T>) {
@@ -43,3 +44,4 @@ abstract class MultiItemTypeAdapter<T>(context: Context, val list: List<T>) : Ba
         return delegate.getItemSpanSize(position)
     }
 }
+
