@@ -13,6 +13,7 @@ import com.dengzq.baservadapter.BaseViewHolder
 import com.dengzq.baservadapter.listener.OnItemClickListener
 import com.dengzq.baservadapter.listener.OnLoadMoreListener
 import com.dengzq.baservadapter.multi.CommonAdapter
+import com.dengzq.decoration.LinearDecoration
 import com.dengzq.demo.R
 import com.dengzq.demo.model.NormalBean
 import com.dengzq.demo.service.ModelService
@@ -81,6 +82,8 @@ class SingleFragment : Fragment() {
                 }, 1000)
             }
         }
+
+        recycler_view.addItemDecoration(LinearDecoration(16f))
     }
 }
 

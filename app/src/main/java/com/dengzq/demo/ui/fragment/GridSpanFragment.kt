@@ -2,16 +2,20 @@ package com.dengzq.demo.ui.fragment
 
 import android.content.Context
 import android.os.Bundle
+import android.os.Handler
 import android.support.v4.app.Fragment
 import android.support.v7.widget.GridLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.dengzq.baservadapter.listener.OnLoadMoreListener
 import com.dengzq.baservadapter.multi.MultiItemTypeAdapter
+import com.dengzq.decoration.GridDecoration
 import com.dengzq.demo.R
 import com.dengzq.demo.delegate.GridSpanDelegate
 import com.dengzq.demo.model.ModelBean
 import com.dengzq.demo.service.ModelService
+import com.dengzq.demo.widget.LoaderView
 import kotlinx.android.synthetic.main.activity_main.*
 
 /**
@@ -42,7 +46,19 @@ class GridSpanFragment : Fragment() {
         simple_refresh.setPullDownEnable(false)
 
         recycler_view.layoutManager = GridLayoutManager(activity, 4)
-        recycler_view.adapter = GridSpanAdapter(activity!!, ModelService.getModelBeanList(14))
+        val adapter = GridSpanAdapter(activity!!, ModelService.getModelBeanList(13))
+        adapter.addLoaderView(LoaderView())
+        adapter.onLoadMoreListener = object : OnLoadMoreListener {
+            override fun onLoadMore() {
+                Handler().postDelayed({
+                    (adapter.list as MutableList).addAll(ModelService.getModelBeanList(6))
+                    adapter.notifyDataSetChanged()
+                    adapter.loadMoreSuccess()
+                }, 1000)
+            }
+        }
+        recycler_view.adapter = adapter
+        recycler_view.addItemDecoration(GridDecoration(10.0f))
     }
 }
 

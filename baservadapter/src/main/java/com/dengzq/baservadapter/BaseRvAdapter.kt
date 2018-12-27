@@ -170,8 +170,8 @@ abstract class BaseRvAdapter(val context: Context) : RecyclerView.Adapter<BaseVi
 
     /**
      * Auto load more data;
-     * If you already set onLoadMoreListener, remember to invoke loadSuccess or
-     * loadFailed to end loadMore event;
+     * If you already set onLoadMoreListener, remember to invoke [loadMoreSuccess] or
+     * [loadMoreFail] to end loadMore event;
      */
     private fun autoLoadMore() {
         //No content, hide loader;
@@ -182,18 +182,14 @@ abstract class BaseRvAdapter(val context: Context) : RecyclerView.Adapter<BaseVi
         //Loading ,return;
         if (loadHelper.state == LoadState.LOADING) return
 
-        //Auto load More;
-        if (loadHelper.hasMore && isContentMoreThanOnePage()) {
-            loadHelper.notifyStateChanged(LoadState.LOADING)
+        //Don't has more,return;
+        if (!loadHelper.hasMore) return
 
-            //Auto load by loadMoreLis, or click to load by loadClickLis;
-            if (loadHelper.autoLoad) {
-                recyclerView.post({ onLoadMoreListener?.onLoadMore() })
-            }
-        } else {
-            //Not match recyclerView's totalHeight, hide loader;
-            loadHelper.hasMore = false
-            loadHelper.notifyStateChanged(LoadState.NORMAL)
+        loadHelper.notifyStateChanged(LoadState.LOADING)
+
+        //Auto load by loadMoreLis, or click to load by loadClickLis;
+        if (loadHelper.autoLoad) {
+            recyclerView.post { onLoadMoreListener?.onLoadMore() }
         }
     }
 
@@ -211,13 +207,15 @@ abstract class BaseRvAdapter(val context: Context) : RecyclerView.Adapter<BaseVi
         if (layoutManager is LinearLayoutManager) {
 
             val lastCompletePos = layoutManager.findLastCompletelyVisibleItemPosition()
-            moreThanOnePage != lastCompletePos >= (layoutManager.childCount - 1)
+            moreThanOnePage != layoutManager.itemCount > getLoaderCount() + getBottomCount()
+                    && lastCompletePos >= (layoutManager.itemCount - getLoaderCount() - getBottomCount())
                     && layoutManager.childCount == (layoutManager.itemCount - getLoaderCount() - getBottomCount())
 
         } else if (layoutManager is StaggeredGridLayoutManager) {
 
             val intArray = layoutManager.findLastCompletelyVisibleItemPositions(null)
-            moreThanOnePage != intArray[intArray.size - 1] >= (layoutManager.childCount - 1)
+            moreThanOnePage != layoutManager.itemCount > getLoaderCount() + getBottomCount()
+                    && intArray[intArray.size - 1] >= (layoutManager.itemCount - getLoaderCount() - getBottomCount())
                     && layoutManager.childCount == (layoutManager.itemCount - getLoaderCount() - getBottomCount())
         }
 

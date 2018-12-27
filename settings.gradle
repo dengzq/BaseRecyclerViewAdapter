@@ -1,1 +1,1 @@
-include ':app', ':baservadapter'
+include ':app', ':baservadapter', ':decoration'

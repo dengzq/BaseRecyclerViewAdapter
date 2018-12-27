@@ -5,10 +5,12 @@ import android.os.Bundle
 import android.os.Handler
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.dengzq.baservadapter.multi.MultiItemTypeAdapter
+import com.dengzq.decoration.LinearDecoration
 import com.dengzq.demo.R
 import com.dengzq.demo.delegate.MultiModelDelegate
 import com.dengzq.demo.delegate.MultiTextDelegate
@@ -45,9 +47,12 @@ class MultiItemFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val list = ModelService.getModelBeanList(10)
+        val list = ModelService.getModelBeanList(30)
         recycler_view.layoutManager = LinearLayoutManager(activity)
         recycler_view.adapter = MultiItemAdapter(activity!!, list)
+
+        recycler_view.addItemDecoration(LinearDecoration(10.0f,RecyclerView.VERTICAL))
+
 
         simple_refresh.setPullUpEnable(false)
         simple_refresh.headerView = SimpleRefresh(activity!!)
