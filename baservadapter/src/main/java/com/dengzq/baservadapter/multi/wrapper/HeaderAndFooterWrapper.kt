@@ -15,8 +15,10 @@ internal class HeaderAndFooterWrapper {
     private val footerObjs = ArrayList<InfoObj>()
 
     fun getHeaderView(viewType: Int): View? {
-        headerObjs.forEach {
-            if (it.viewType == viewType) return it.view
+
+        for (headerObj in headerObjs) {
+            if (headerObj.viewType == viewType)
+                return headerObj.view
         }
         return null
     }
@@ -24,16 +26,19 @@ internal class HeaderAndFooterWrapper {
     fun getHeaderType(position: Int): Int = headerObjs[position].viewType
 
     fun getHeaderKey(viewType: Int): String {
-        headerObjs.forEach {
-            if (it.viewType == viewType) return it.key
-        }
 
-        return "no such header-key"
+        for (headerObj in headerObjs) {
+            if (headerObj.viewType == viewType)
+                return headerObj.key
+        }
+        return "no such header-key for viewType: $viewType"
     }
 
     fun getFooterView(viewType: Int): View? {
-        footerObjs.forEach {
-            if (viewType == it.viewType) return it.view
+
+        for (footerObj in footerObjs) {
+            if (footerObj.viewType == viewType)
+                return footerObj.view
         }
         return null
     }
@@ -41,12 +46,13 @@ internal class HeaderAndFooterWrapper {
     fun getFooterType(position: Int): Int = footerObjs[position].viewType
 
     fun getFooterKey(viewType: Int): String {
-        footerObjs.forEach {
-            if (it.viewType == viewType) {
-                return it.key
-            }
+
+        for (footerObj in footerObjs) {
+            if (footerObj.viewType == viewType)
+                return footerObj.key
         }
-        return "no such footer-key"
+
+        return "no such footer-key for viewType:$viewType"
     }
 
     fun getHeaderCount(): Int = headerObjs.size
@@ -74,18 +80,25 @@ internal class HeaderAndFooterWrapper {
     }
 
     private fun checkViewTypeExist(viewType: Int, source: ArrayList<InfoObj>): Boolean {
+
         if (source.isEmpty()) return false
-        source.forEach {
-            if (viewType == it.viewType) return true
+
+        for (infoObj in source) {
+            if (infoObj.viewType == viewType)
+                return true
         }
         return false
     }
 
     private fun checkKeyExist(key: String, source: ArrayList<InfoObj>): Boolean {
+
         if (source.isEmpty() || key.isEmpty()) return false
-        source.forEach {
-            if (key == it.key) return true
+
+        for (infoObj in source) {
+            if (infoObj.key == key)
+                return true
         }
+
         return false
     }
 
@@ -98,18 +111,22 @@ internal class HeaderAndFooterWrapper {
     }
 
     private fun addHeaderView(key: String, viewType: Int, view: View) {
+
         if (key.isEmpty()) throw IllegalArgumentException("Invalid header view key: $key")
-        headerObjs.forEach {
-            if (key.isEmpty() || key == it.key) {
+
+
+        for (headerObj in headerObjs) {
+            if (headerObj.key == key)
                 throw IllegalArgumentException("HeaderView with key=$key is already added to the recyclerView !")
-            }
         }
 
         headerObjs.add(InfoObj(viewType, key, view))
     }
 
     fun removeHeader(key: String) {
+
         val iterator = headerObjs.iterator()
+
         while (iterator.hasNext()) {
             val infoObj = iterator.next()
             if (key == infoObj.key) {
@@ -133,16 +150,21 @@ internal class HeaderAndFooterWrapper {
     }
 
     private fun addFooter(key: String, viewType: Int, view: View) {
+
         if (key.isEmpty()) throw IllegalArgumentException("Invalid footer view key: $key")
-        footerObjs.forEach {
-            if (key == it.key) throw IllegalArgumentException("FooterView with key=$key is already added to the recyclerView !")
+
+        for (footerObj in footerObjs) {
+            if (footerObj.key == key)
+                throw IllegalArgumentException("FooterView with key=$key is already added to the recyclerView !")
         }
 
         footerObjs.add(InfoObj(viewType, key, view))
     }
 
     fun removeFooter(key: String) {
+
         val iterator = footerObjs.iterator()
+
         while (iterator.hasNext()) {
             val infoObj = iterator.next()
             if (key == infoObj.key) {

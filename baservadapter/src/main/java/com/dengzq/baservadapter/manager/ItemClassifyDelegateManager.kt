@@ -36,7 +36,7 @@ internal class ItemClassifyDelegateManager {
 
     fun getItemViewType(position: Int): Int {
         var p = position
-        for (i in 0..delegates.size()) {
+        for (i in 0 until delegates.size()) {
             val delegate = delegates.valueAt(i)
             if (delegate.needShow()) {
                 if (p < delegate.getItemSize())

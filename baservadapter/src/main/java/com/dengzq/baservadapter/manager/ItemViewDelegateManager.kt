@@ -42,7 +42,7 @@ internal class ItemViewDelegateManager<T> {
     }
 
     fun convert(holder: BaseViewHolder, t: T, position: Int) {
-        for (i in 0..delegates.size()) {
+        for (i in 0 until delegates.size()) {
 
             val delegate = delegates.valueAt(i)
 

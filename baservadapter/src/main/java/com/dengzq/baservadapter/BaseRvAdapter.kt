@@ -4,7 +4,6 @@ package com.dengzq.baservadapter
 
 import android.content.Context
 import android.support.v7.widget.GridLayoutManager
-import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.StaggeredGridLayoutManager
 import android.view.View
@@ -111,7 +110,7 @@ abstract class BaseRvAdapter(val context: Context) : RecyclerView.Adapter<BaseVi
             isHeaderPosition(position) || isFooterPosition(position)
                     || isBottomPosition(position) -> return
 
-            isLoaderPosition(position) -> autoLoadMore()
+            isLoaderPosition(position) -> autoLoadMore(holder, position)
 
             else -> bindRealHolder(holder, position - hfHelper.getHeaderCount())
         }
@@ -148,7 +147,7 @@ abstract class BaseRvAdapter(val context: Context) : RecyclerView.Adapter<BaseVi
         }
         holder.getConvertView().setOnLongClickListener {
             onItemLongClickListener?.onItemLongClick(it, holder, holder.adapterPosition - hfHelper.getHeaderCount())
-            onItemLongClickListener != null
+                    ?: false
         }
     }
 
@@ -173,7 +172,7 @@ abstract class BaseRvAdapter(val context: Context) : RecyclerView.Adapter<BaseVi
      * If you already set onLoadMoreListener, remember to invoke [loadMoreSuccess] or
      * [loadMoreFail] to end loadMore event;
      */
-    private fun autoLoadMore() {
+    private fun autoLoadMore(holder: BaseViewHolder, position: Int) {
         //No content, hide loader;
         if (getHeaderCount() + getFooterCount() + getRealItemCount() <= 0) {
             loadHelper.notifyStateChanged(LoadState.NORMAL)
@@ -183,7 +182,32 @@ abstract class BaseRvAdapter(val context: Context) : RecyclerView.Adapter<BaseVi
         if (loadHelper.state == LoadState.LOADING) return
 
         //Don't has more,return;
-        if (!loadHelper.hasMore) return
+        if (!loadHelper.hasMore) {
+            loadHelper.notifyStateChanged(LoadState.NORMAL)
+            return
+        }
+
+        //No real item,hide loader;
+        if (getRealItemCount() == 0 && getHeaderCount() == 0 && getFooterCount() == 0) {
+            loadHelper.notifyStateChanged(LoadState.NORMAL)
+            return
+        }
+
+        //Not match recyclerView's total height, hide loader;
+        if (position > 0) {
+            var view: View? = null
+            var prePosition = position
+
+            while (view == null && prePosition >= 0) {
+                if (prePosition > 0) prePosition--
+                view = recyclerView.layoutManager.findViewByPosition(prePosition)
+            }
+
+            if (view != null && view.bottom < recyclerView.measuredHeight - recyclerView.paddingBottom) {
+                loadHelper.notifyStateChanged(LoadState.NORMAL)
+                return
+            }
+        }
 
         loadHelper.notifyStateChanged(LoadState.LOADING)
 
@@ -191,36 +215,6 @@ abstract class BaseRvAdapter(val context: Context) : RecyclerView.Adapter<BaseVi
         if (loadHelper.autoLoad) {
             recyclerView.post { onLoadMoreListener?.onLoadMore() }
         }
-    }
-
-    /**
-     * whether recyclerView already shows all content;
-     * @return true if rv's content is more than one page,means that we can show loader if hasMore;
-     * false otherwise;
-     */
-    private fun isContentMoreThanOnePage(): Boolean {
-
-        val moreThanOnePage = false
-
-        val layoutManager = recyclerView.layoutManager
-
-        if (layoutManager is LinearLayoutManager) {
-
-            val lastCompletePos = layoutManager.findLastCompletelyVisibleItemPosition()
-            moreThanOnePage != layoutManager.itemCount > getLoaderCount() + getBottomCount()
-                    && lastCompletePos >= (layoutManager.itemCount - getLoaderCount() - getBottomCount())
-                    && layoutManager.childCount == (layoutManager.itemCount - getLoaderCount() - getBottomCount())
-
-        } else if (layoutManager is StaggeredGridLayoutManager) {
-
-            val intArray = layoutManager.findLastCompletelyVisibleItemPositions(null)
-            moreThanOnePage != layoutManager.itemCount > getLoaderCount() + getBottomCount()
-                    && intArray[intArray.size - 1] >= (layoutManager.itemCount - getLoaderCount() - getBottomCount())
-                    && layoutManager.childCount == (layoutManager.itemCount - getLoaderCount() - getBottomCount())
-        }
-
-        return (moreThanOnePage && recyclerView.scrollState == RecyclerView.SCROLL_STATE_IDLE) ||
-                recyclerView.scrollState != RecyclerView.SCROLL_STATE_IDLE
     }
 
     /**

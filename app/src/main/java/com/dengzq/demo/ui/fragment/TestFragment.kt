@@ -2,12 +2,13 @@ package com.dengzq.demo.ui.fragment
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.dengzq.decoration.StickyLayoutManager
 import com.dengzq.demo.R
 import com.dengzq.demo.service.ModelService
+import com.dengzq.demo.widget.LoaderView
 import kotlinx.android.synthetic.main.activity_main.*
 
 /**
@@ -33,9 +34,10 @@ class TestFragment : Fragment() {
         simple_refresh.setPullDownEnable(false)
         simple_refresh.setPullUpEnable(false)
 
-        val list = ModelService.getNormalBeanList(30)
+        val list = ModelService.getNormalBeanList(2)
         val adapter = SingleTypeAdapter(activity!!, list)
-        recycler_view.layoutManager = StickyLayoutManager()
+        adapter.addLoaderView(LoaderView())
+        recycler_view.layoutManager = LinearLayoutManager(activity)
         recycler_view.adapter = adapter
     }
 }

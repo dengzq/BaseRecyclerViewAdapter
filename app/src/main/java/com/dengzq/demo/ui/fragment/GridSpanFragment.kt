@@ -46,7 +46,8 @@ class GridSpanFragment : Fragment() {
         simple_refresh.setPullDownEnable(false)
 
         recycler_view.layoutManager = GridLayoutManager(activity, 4)
-        val adapter = GridSpanAdapter(activity!!, ModelService.getModelBeanList(13))
+        //ModelService.getModelBeanList(6)
+        val adapter = GridSpanAdapter(activity!!, ModelService.getModelBeanList(1))
         adapter.addLoaderView(LoaderView())
         adapter.onLoadMoreListener = object : OnLoadMoreListener {
             override fun onLoadMore() {
