@@ -36,6 +36,9 @@ dependencies {
 
     implementation 'cn.bingoogolapple:bga-banner:2.2.4@aar'
     implementation project(':decoration')
+
+    //tiny dancer for fps check
+    debugCompile "com.github.brianPlummer:tinydancer:0.1.2"
 }
 repositories {
     mavenCentral()

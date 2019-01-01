@@ -1,3 +1,5 @@
+@file:Suppress("UNCHECKED_CAST")
+
 package com.dengzq.baservadapter
 
 import android.content.Context
@@ -34,8 +36,7 @@ class BaseViewHolder(val context: Context, itemView: View) : RecyclerView.ViewHo
 
     }
 
-    @Suppress("UNCHECKED_CAST")
-    public fun <T : View> getView(resId: Int): T {
+    fun <T : View> getView(resId: Int): T {
         var view = mViews.get(resId)
         if (view == null) {
             view = itemView.findViewById(resId)
@@ -46,9 +47,6 @@ class BaseViewHolder(val context: Context, itemView: View) : RecyclerView.ViewHo
 
     fun getConvertView(): View = itemView
 
-    /**
-     * 以下是辅助方法
-     */
     fun setText(viewId: Int, text: String): BaseViewHolder {
         val tv = getView<TextView>(viewId)
         tv.text = text

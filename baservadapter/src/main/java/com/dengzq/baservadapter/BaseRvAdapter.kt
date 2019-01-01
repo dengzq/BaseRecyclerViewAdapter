@@ -43,7 +43,7 @@ abstract class BaseRvAdapter(val context: Context) : RecyclerView.Adapter<BaseVi
     private val loadHelper = LoaderWrapper(context)
     private val btmHelper = BottomWrapper()
 
-    private lateinit var recyclerView: RecyclerView
+    private var recyclerView: RecyclerView? = null
 
     var onItemClickListener: OnItemClickListener? = null
     var onItemLongClickListener: OnItemLongClickListener? = null
@@ -110,7 +110,7 @@ abstract class BaseRvAdapter(val context: Context) : RecyclerView.Adapter<BaseVi
             isHeaderPosition(position) || isFooterPosition(position)
                     || isBottomPosition(position) -> return
 
-            isLoaderPosition(position) -> autoLoadMore(holder, position)
+            isLoaderPosition(position) -> autoLoadMore()
 
             else -> bindRealHolder(holder, position - hfHelper.getHeaderCount())
         }
@@ -151,6 +151,8 @@ abstract class BaseRvAdapter(val context: Context) : RecyclerView.Adapter<BaseVi
         }
     }
 
+    private fun isHasContent(): Boolean = getHeaderCount() + getRealItemCount() + getFooterCount() > 0
+
     private fun isHeaderPosition(position: Int): Boolean = hfHelper.getHeaderCount() > 0 && position < hfHelper.getHeaderCount()
 
     private fun isFooterPosition(position: Int): Boolean = hfHelper.getFooterCount() > 0 && position >= hfHelper.getHeaderCount() + getRealItemCount()
@@ -161,18 +163,16 @@ abstract class BaseRvAdapter(val context: Context) : RecyclerView.Adapter<BaseVi
     private fun isBottomPosition(position: Int): Boolean = getBottomCount() > 0 && position == hfHelper.getHeaderCount() + hfHelper.getFooterCount() +
             getRealItemCount()
 
-    private fun getLoaderCount(): Int = if (canShowBottom()) 0 else loadHelper.getLoaderCount()
+    private fun getLoaderCount(): Int = if (loadHelper.hasMore && isHasContent()) loadHelper.getLoaderCount() else 0
 
-    private fun getBottomCount(): Int = if (canShowBottom()) btmHelper.getBottomCount() else 0
-
-    private fun canShowBottom(): Boolean = !loadHelper.hasMore
+    private fun getBottomCount(): Int = if (!loadHelper.hasMore && isHasContent()) btmHelper.getBottomCount() else 0
 
     /**
      * Auto load more data;
      * If you already set onLoadMoreListener, remember to invoke [loadMoreSuccess] or
      * [loadMoreFail] to end loadMore event;
      */
-    private fun autoLoadMore(holder: BaseViewHolder, position: Int) {
+    private fun autoLoadMore() {
         //No content, hide loader;
         if (getHeaderCount() + getFooterCount() + getRealItemCount() <= 0) {
             loadHelper.notifyStateChanged(LoadState.NORMAL)
@@ -187,33 +187,11 @@ abstract class BaseRvAdapter(val context: Context) : RecyclerView.Adapter<BaseVi
             return
         }
 
-        //No real item,hide loader;
-        if (getRealItemCount() == 0 && getHeaderCount() == 0 && getFooterCount() == 0) {
-            loadHelper.notifyStateChanged(LoadState.NORMAL)
-            return
-        }
-
-        //Not match recyclerView's total height, hide loader;
-        if (position > 0) {
-            var view: View? = null
-            var prePosition = position
-
-            while (view == null && prePosition >= 0) {
-                if (prePosition > 0) prePosition--
-                view = recyclerView.layoutManager.findViewByPosition(prePosition)
-            }
-
-            if (view != null && view.bottom < recyclerView.measuredHeight - recyclerView.paddingBottom) {
-                loadHelper.notifyStateChanged(LoadState.NORMAL)
-                return
-            }
-        }
-
         loadHelper.notifyStateChanged(LoadState.LOADING)
 
         //Auto load by loadMoreLis, or click to load by loadClickLis;
         if (loadHelper.autoLoad) {
-            recyclerView.post { onLoadMoreListener?.onLoadMore() }
+            recyclerView?.post { onLoadMoreListener?.onLoadMore() }
         }
     }
 
@@ -337,6 +315,11 @@ abstract class BaseRvAdapter(val context: Context) : RecyclerView.Adapter<BaseVi
         onLoadMoreListener?.onLoadMore()
     }
 
+    fun goReloadingOutsider() {
+        //just reset loading state ; do what you want by yourself;
+        loadHelper.notifyStateChanged(LoadState.LOADING)
+    }
+
     fun isHasMore(hasMore: Boolean) {
         loadHelper.isHasMore(hasMore)
         notifyDataSetChanged()
@@ -344,6 +327,11 @@ abstract class BaseRvAdapter(val context: Context) : RecyclerView.Adapter<BaseVi
 
     fun addBottomView(view: View?) {
         btmHelper.addBottomView(view)
+        notifyDataSetChanged()
+    }
+
+    fun removeBottomView() {
+        btmHelper.removeBottomView()
         notifyDataSetChanged()
     }
 

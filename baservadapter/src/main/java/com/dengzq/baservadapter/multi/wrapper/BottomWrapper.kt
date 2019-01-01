@@ -22,4 +22,8 @@ internal class BottomWrapper {
     fun addBottomView(view: View?) {
         this.view = view
     }
+
+    fun removeBottomView() {
+        this.view = null
+    }
 }
