@@ -8,9 +8,9 @@ import android.support.v7.widget.GridLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.dengzq.baservadapter.interfaces.DefaultNullDelegate
 import com.dengzq.baservadapter.listener.OnLoadMoreListener
 import com.dengzq.baservadapter.multi.MultiItemTypeAdapter
-import com.dengzq.decoration.GridDecoration
 import com.dengzq.demo.R
 import com.dengzq.demo.delegate.GridSpanDelegate
 import com.dengzq.demo.model.ModelBean
@@ -59,12 +59,12 @@ class GridSpanFragment : Fragment() {
             }
         }
         recycler_view.adapter = adapter
-        recycler_view.addItemDecoration(GridDecoration(10.0f))
     }
 }
 
 class GridSpanAdapter(context: Context, list: List<ModelBean>) : MultiItemTypeAdapter<ModelBean>(context, list) {
     init {
         addItemViewDelegate(GridSpanDelegate())
+        addItemViewDelegate(DefaultNullDelegate())
     }
 }
