@@ -16,5 +16,5 @@ abstract class ItemViewDelegate<in T> : IDelegate {
 
     abstract fun convert(holder: BaseViewHolder, t: T, position: Int)
 
-    override fun getItemSpanSize(position: Int): Int=-1
+    override fun getItemSpanSize(position: Int,spanCount:Int): Int=-1
 }

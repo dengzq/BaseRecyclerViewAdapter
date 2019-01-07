@@ -39,9 +39,9 @@ abstract class MultiItemTypeAdapter<T>(context: Context, val list: List<T>) : Ba
 
     private fun isUseDelegateManager(): Boolean = delegateManager.getDelegateCount() > 0
 
-    override fun getRealSpanSize(position: Int): Int {
+    override fun getRealSpanSize(position: Int,spanCount:Int): Int {
         val delegate = delegateManager.getItemViewDelegate(getRealViewType(position))
-        return delegate.getItemSpanSize(position)
+        return delegate.getItemSpanSize(position,spanCount)
     }
 }
 

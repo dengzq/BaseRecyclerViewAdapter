@@ -8,5 +8,5 @@ package com.dengzq.baservadapter.interfaces
  */
 interface IDelegate {
 
-    fun getItemSpanSize(position: Int): Int
+    fun getItemSpanSize(position: Int,spanCount:Int): Int
 }

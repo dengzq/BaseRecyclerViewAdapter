@@ -35,5 +35,5 @@ class ClassifyTabDelegate(private val context: Context, private val presenter: I
         }
     }
 
-    override fun getItemSpanSize(position: Int): Int = 4
+    override fun getItemSpanSize(position: Int,spanCount:Int): Int = 4
 }

@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -91,5 +92,15 @@ class SingleTypeAdapter(context: Context, list: ArrayList<NormalBean>) : CommonA
     override fun convert(holder: BaseViewHolder, bean: NormalBean, position: Int) {
         holder.setText(R.id.tv_title, bean.title)
         holder.setImageResource(R.id.iv_img, bean.imgRes)
+    }
+
+    override fun convertHeader(holder: BaseViewHolder, position: Int, key: String) {
+        super.convertHeader(holder, position, key)
+        Log.d("SingleAdapter", "convert header :$key")
+    }
+
+    override fun convertFooter(holder: BaseViewHolder, position: Int, key: String) {
+        super.convertFooter(holder, position, key)
+        Log.d("SingleAdapter", "convert footer :$key")
     }
 }

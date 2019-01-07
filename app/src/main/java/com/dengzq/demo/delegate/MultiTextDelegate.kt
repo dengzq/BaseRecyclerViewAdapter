@@ -20,6 +20,6 @@ class MultiTextDelegate:ItemViewDelegate<ModelBean>(){
         holder.setText(R.id.tv_text,t.nick+" || Most parents genuinely do their best to provide their children with a happy and healthy upbringing, but even these individuals can accidentally make mistakes that may result in future therapy appointments.")
     }
 
-    override fun getItemSpanSize(position: Int): Int=2
+    override fun getItemSpanSize(position: Int,spanCount:Int): Int=2
 
 }

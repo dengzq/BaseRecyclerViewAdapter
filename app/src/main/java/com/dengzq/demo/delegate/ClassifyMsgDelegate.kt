@@ -23,5 +23,5 @@ class ClassifyMsgDelegate(private val presenter: IClassifyPresenter) : ItemClass
         holder.setText(R.id.tv_text, news.news + " || Most parents genuinely do their best to provide their children with a happy and healthy upbringing, but even these individuals can accidentally make mistakes that may result in future therapy appointments.")
     }
 
-    override fun getItemSpanSize(position: Int): Int = 4
+    override fun getItemSpanSize(position: Int,spanCount:Int): Int = 4
 }

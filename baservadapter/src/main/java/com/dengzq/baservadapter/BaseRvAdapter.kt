@@ -53,11 +53,15 @@ abstract class BaseRvAdapter(val context: Context) : RecyclerView.Adapter<BaseVi
     var onBottomClickListener: OnBottomClickListener? = null
     var onLoadMoreListener: OnLoadMoreListener? = null
 
-    protected abstract fun getRealSpanSize(position: Int): Int
+    protected abstract fun getRealSpanSize(position: Int, spanCount: Int): Int
     protected abstract fun getRealItemCount(): Int
     protected abstract fun getRealViewType(position: Int): Int
     protected abstract fun createRealHolder(parent: ViewGroup, viewType: Int): BaseViewHolder
     protected abstract fun bindRealHolder(holder: BaseViewHolder, position: Int)
+    protected open fun convertHeader(holder: BaseViewHolder, position: Int, key: String) {}
+    protected open fun convertFooter(holder: BaseViewHolder, position: Int, key: String) {}
+    protected open fun convertLoader(holder: BaseViewHolder, position: Int) {}
+    protected open fun convertBottom(holder: BaseViewHolder, position: Int) {}
 
     override fun getItemViewType(position: Int): Int {
         return when {
@@ -107,11 +111,13 @@ abstract class BaseRvAdapter(val context: Context) : RecyclerView.Adapter<BaseVi
     override fun onBindViewHolder(holder: BaseViewHolder, position: Int) {
 
         when {
-            isHeaderPosition(position) || isFooterPosition(position)
-                    || isBottomPosition(position) -> return
-
-            isLoaderPosition(position) -> autoLoadMore()
-
+            isHeaderPosition(position) -> convertHeader(holder, position, hfHelper.getHeaderKey(getItemViewType(position)))
+            isFooterPosition(position) -> convertFooter(holder, position, hfHelper.getFooterKey(getItemViewType(position)))
+            isBottomPosition(position) -> convertBottom(holder, position)
+            isLoaderPosition(position) -> {
+                convertLoader(holder, position)
+                autoLoadMore()
+            }
             else -> bindRealHolder(holder, position - hfHelper.getHeaderCount())
         }
 
@@ -212,7 +218,7 @@ abstract class BaseRvAdapter(val context: Context) : RecyclerView.Adapter<BaseVi
                                 || isBottomPosition(position)
                         -> layoutManager.spanCount
                         else -> {
-                            val size = getRealSpanSize(position - hfHelper.getHeaderCount())
+                            val size = getRealSpanSize(position - hfHelper.getHeaderCount(), layoutManager.spanCount)
                             if (size != -1) {
                                 if (size > layoutManager.spanCount || size <= 0) {
                                     throw IllegalArgumentException("Wrong span size parameter, span size : $size ")

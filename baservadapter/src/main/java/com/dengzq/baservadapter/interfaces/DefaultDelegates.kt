@@ -14,4 +14,5 @@ class DefaultNullDelegate : ItemViewDelegate<Any>() {
     override fun getItemViewLayoutId(): Int = R.layout.layout_delegate_default
     override fun isForViewType(t: Any, position: Int): Boolean = true
     override fun convert(holder: BaseViewHolder, t: Any, position: Int) {}
+    override fun getItemSpanSize(position: Int, spanCount: Int): Int = spanCount
 }

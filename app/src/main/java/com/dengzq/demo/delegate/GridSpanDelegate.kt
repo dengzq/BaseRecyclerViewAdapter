@@ -29,7 +29,7 @@ class GridSpanDelegate : ItemViewDelegate<ModelBean>() {
         }
     }
 
-    override fun getItemSpanSize(position: Int): Int {
+    override fun getItemSpanSize(position: Int, spanCount: Int): Int {
         return when (position % 7) {
             0 -> 4
             1, 2 -> 2
