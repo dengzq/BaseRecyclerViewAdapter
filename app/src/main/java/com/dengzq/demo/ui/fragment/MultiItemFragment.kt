@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.dengzq.baservadapter.interfaces.ItemNullDelegate
 import com.dengzq.baservadapter.multi.MultiItemTypeAdapter
 import com.dengzq.decoration.LinearDecoration
 import com.dengzq.demo.R
@@ -49,10 +50,10 @@ class MultiItemFragment : Fragment() {
 
         val list = ModelService.getModelBeanList(30)
         recycler_view.layoutManager = LinearLayoutManager(activity)
-        recycler_view.adapter = MultiItemAdapter(activity!!, list)
+        val multiItemAdapter = MultiItemAdapter(activity!!, list)
+        recycler_view.adapter = multiItemAdapter
 
-        recycler_view.addItemDecoration(LinearDecoration(10.0f,RecyclerView.VERTICAL))
-
+        recycler_view.addItemDecoration(LinearDecoration(10.0f, RecyclerView.VERTICAL))
 
         simple_refresh.setPullUpEnable(false)
         simple_refresh.headerView = SimpleRefresh(activity!!)
@@ -77,5 +78,6 @@ class MultiItemAdapter(context: Context, list: List<ModelBean>) : MultiItemTypeA
     init {
         addItemViewDelegate(MultiModelDelegate())
         addItemViewDelegate(MultiTextDelegate())
+        addItemViewDelegate(ItemNullDelegate())
     }
 }

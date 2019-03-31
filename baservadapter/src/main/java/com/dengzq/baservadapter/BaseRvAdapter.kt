@@ -26,12 +26,18 @@ abstract class BaseRvAdapter(val context: Context) : RecyclerView.Adapter<BaseVi
 
     internal companion object StaticObj {
         /**
-         * Range of ViewType;
-         * HEADER: [0~100000)
-         * FOOTER: [100000~200000)
-         * LOADER: 200001
-         * BOTTOM: 200002
-         * VIEWER: [300000~ )
+         *  Range of ViewType
+         * |------------------------|
+         * |   Header[0~100000)     |
+         * |------------------------|
+         * |   Real Item[300000~ )  |
+         * |------------------------|
+         * |  Footer[100000~200000) |
+         * |------------------------|
+         * |     Loader(200001)     |
+         * |------------------------|
+         * |     Bottom(200002)     |
+         * |------------------------|
          */
         internal const val FOOTER_INDEX = 100000
         internal const val LOADER_INDEX = 200001
@@ -58,6 +64,10 @@ abstract class BaseRvAdapter(val context: Context) : RecyclerView.Adapter<BaseVi
     protected abstract fun getRealViewType(position: Int): Int
     protected abstract fun createRealHolder(parent: ViewGroup, viewType: Int): BaseViewHolder
     protected abstract fun bindRealHolder(holder: BaseViewHolder, position: Int)
+    protected open fun onDelegateViewAttachedToWindow(position: Int, holder: BaseViewHolder) {}
+    protected open fun onDelegateViewDetachedFromWindow(position: Int, holder: BaseViewHolder) {}
+    protected open fun onDelegateFailedToRecycleView(position: Int, holder: BaseViewHolder): Boolean = false
+    protected open fun onDelegateViewRecycled(position: Int, holder: BaseViewHolder) {}
     protected open fun convertHeader(holder: BaseViewHolder, position: Int, key: String) {}
     protected open fun convertFooter(holder: BaseViewHolder, position: Int, key: String) {}
     protected open fun convertLoader(holder: BaseViewHolder, position: Int) {}
@@ -109,7 +119,6 @@ abstract class BaseRvAdapter(val context: Context) : RecyclerView.Adapter<BaseVi
     }
 
     override fun onBindViewHolder(holder: BaseViewHolder, position: Int) {
-
         when {
             isHeaderPosition(position) -> convertHeader(holder, position, hfHelper.getHeaderKey(getItemViewType(position)))
             isFooterPosition(position) -> convertFooter(holder, position, hfHelper.getFooterKey(getItemViewType(position)))
@@ -169,14 +178,20 @@ abstract class BaseRvAdapter(val context: Context) : RecyclerView.Adapter<BaseVi
     private fun isBottomPosition(position: Int): Boolean = getBottomCount() > 0 && position == hfHelper.getHeaderCount() + hfHelper.getFooterCount() +
             getRealItemCount()
 
+    private fun isRealPosition(position: Int): Boolean = (!isHeaderPosition(position)) && (!isFooterPosition(position)) &&
+            (!isLoaderPosition(position)) && (!isBottomPosition(position))
+
     private fun getLoaderCount(): Int = if (loadHelper.hasMore && isHasContent()) loadHelper.getLoaderCount() else 0
 
     private fun getBottomCount(): Int = if (!loadHelper.hasMore && isHasContent()) btmHelper.getBottomCount() else 0
 
+    private fun getRealItemPosition(position: Int) = position - hfHelper.getHeaderCount()
+
     /**
      * Auto load more data;
-     * If you already set onLoadMoreListener, remember to invoke [loadMoreSuccess] or
-     * [loadMoreFail] to end loadMore event;
+     * If you already set [OnLoadMoreListener], remember to invoke [loadMoreSuccess] or
+     * [loadMoreFail] to finish load more action. Otherwise, try to notify adapter if there is
+     * no data by [isHasMore];
      */
     private fun autoLoadMore() {
         //No content, hide loader;
@@ -202,8 +217,7 @@ abstract class BaseRvAdapter(val context: Context) : RecyclerView.Adapter<BaseVi
     }
 
     /**
-     * Reset span size for GridLayoutManager;
-     * Bind target recyclerView;
+     * Set Span size for gridLayoutManager;
      */
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
         this.recyclerView = recyclerView
@@ -219,13 +233,16 @@ abstract class BaseRvAdapter(val context: Context) : RecyclerView.Adapter<BaseVi
                         -> layoutManager.spanCount
                         else -> {
                             val size = getRealSpanSize(position - hfHelper.getHeaderCount(), layoutManager.spanCount)
-                            if (size != -1) {
-                                if (size > layoutManager.spanCount || size <= 0) {
-                                    throw IllegalArgumentException("Wrong span size parameter, span size : $size ")
+                            when (size) {
+                                -2 -> return layoutManager.spanCount  //spanCount for default value -2
+                                -1 -> return oldLookup.getSpanSize(position) //default spanSize which is 1
+                                else -> {
+                                    if (size > layoutManager.spanCount || size < 0) {
+                                        throw IllegalArgumentException("Wrong span size parameter, span size : $size ")
+                                    }
+                                    size
                                 }
-                                size
-                            } else
-                                oldLookup.getSpanSize(position)
+                            }
                         }
                     }
                 }
@@ -244,6 +261,32 @@ abstract class BaseRvAdapter(val context: Context) : RecyclerView.Adapter<BaseVi
             if (lp is StaggeredGridLayoutManager.LayoutParams) {
                 lp.isFullSpan = true
             }
+        }
+
+        if (position != RecyclerView.NO_POSITION && isRealPosition(position)) {
+            onDelegateViewAttachedToWindow(getRealItemPosition(position), holder)
+        }
+    }
+
+    override fun onViewDetachedFromWindow(holder: BaseViewHolder) {
+        val position = holder.adapterPosition
+        if (position != RecyclerView.NO_POSITION && isRealPosition(position)) {
+            onDelegateViewDetachedFromWindow(getRealItemPosition(position), holder)
+        }
+    }
+
+    override fun onFailedToRecycleView(holder: BaseViewHolder): Boolean {
+        val position = holder.adapterPosition
+        if (position != RecyclerView.NO_POSITION && isRealPosition(position)) {
+            return onDelegateFailedToRecycleView(getRealItemPosition(position), holder)
+        }
+        return super.onFailedToRecycleView(holder)
+    }
+
+    override fun onViewRecycled(holder: BaseViewHolder) {
+        val position = holder.adapterPosition
+        if (position != RecyclerView.NO_POSITION && isRealPosition(position)) {
+            onDelegateViewRecycled(getRealItemPosition(position), holder)
         }
     }
 
@@ -304,8 +347,10 @@ abstract class BaseRvAdapter(val context: Context) : RecyclerView.Adapter<BaseVi
     }
 
     fun openLoadMore(open: Boolean) {
-        loadHelper.openLoad = open
-        notifyDataSetChanged()
+        if (loadHelper.openLoad != open) {
+            loadHelper.openLoad = open
+            notifyDataSetChanged()
+        }
     }
 
     fun loadMoreFail() {
@@ -321,14 +366,15 @@ abstract class BaseRvAdapter(val context: Context) : RecyclerView.Adapter<BaseVi
         onLoadMoreListener?.onLoadMore()
     }
 
-    fun goReloadingOutsider() {
-        //just reset loading state ; do what you want by yourself;
+    fun goEmptyReloading() {
         loadHelper.notifyStateChanged(LoadState.LOADING)
     }
 
     fun isHasMore(hasMore: Boolean) {
-        loadHelper.isHasMore(hasMore)
-        notifyDataSetChanged()
+        if (loadHelper.hasMore != hasMore) {
+            loadHelper.isHasMore(hasMore)
+            notifyDataSetChanged()
+        }
     }
 
     fun addBottomView(view: View?) {

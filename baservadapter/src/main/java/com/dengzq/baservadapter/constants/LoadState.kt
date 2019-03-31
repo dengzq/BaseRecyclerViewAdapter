@@ -4,7 +4,7 @@ package com.dengzq.baservadapter.constants
  * <p>author    dengzq</P>
  * <p>date      2018/5/30 上午10:12</p>
  * <p>package   com.dengzq.baservadapter.constants</p>
- * <p>readMe    Enum state for load more action;</p>
+ * <p>readMe    Load state for load more action;</p>
  */
 enum class LoadState {
 

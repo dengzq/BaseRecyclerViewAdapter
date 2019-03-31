@@ -1,5 +1,6 @@
 package com.dengzq.demo.delegate
 
+import android.util.Log
 import com.dengzq.baservadapter.BaseViewHolder
 import com.dengzq.baservadapter.interfaces.ItemClassifyDelegate
 import com.dengzq.demo.R
@@ -23,5 +24,25 @@ class ClassifyMsgDelegate(private val presenter: IClassifyPresenter) : ItemClass
         holder.setText(R.id.tv_text, news.news + " || Most parents genuinely do their best to provide their children with a happy and healthy upbringing, but even these individuals can accidentally make mistakes that may result in future therapy appointments.")
     }
 
-    override fun getItemSpanSize(position: Int,spanCount:Int): Int = 4
+    override fun getItemSpanSize(position: Int, spanCount: Int): Int = 4
+
+    override fun onDelegateViewAttachedToWindow(position: Int, holder: BaseViewHolder) {
+        super.onDelegateViewAttachedToWindow(position, holder)
+        Log.d("ClassifyMsgDelegate", "ClassifyMsgDelegate onDelegateViewAttachedToWindow , position => $position")
+    }
+
+    override fun onDelegateViewDetachedFromWindow(position: Int, holder: BaseViewHolder) {
+        super.onDelegateViewDetachedFromWindow(position, holder)
+        Log.d("ClassifyMsgDelegate", "ClassifyMsgDelegate onDelegateViewDetachedFromWindow , position => $position")
+    }
+
+    override fun onDelegateFailedToRecycleView(position: Int, holder: BaseViewHolder): Boolean {
+        Log.d("ClassifyMsgDelegate", "ClassifyMsgDelegate onDelegateFailedToRecycleView , position => $position")
+        return super.onDelegateFailedToRecycleView(position, holder)
+    }
+
+    override fun onDelegateViewRecycled(position: Int, holder: BaseViewHolder) {
+        super.onDelegateViewRecycled(position, holder)
+        Log.d("ClassifyMsgDelegate", "ClassifyMsgDelegate onDelegateViewRecycled , position => $position")
+    }
 }

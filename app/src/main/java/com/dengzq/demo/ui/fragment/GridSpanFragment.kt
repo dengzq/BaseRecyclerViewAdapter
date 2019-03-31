@@ -8,7 +8,7 @@ import android.support.v7.widget.GridLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.dengzq.baservadapter.interfaces.DefaultNullDelegate
+import com.dengzq.baservadapter.interfaces.ItemNullDelegate
 import com.dengzq.baservadapter.listener.OnLoadMoreListener
 import com.dengzq.baservadapter.multi.MultiItemTypeAdapter
 import com.dengzq.demo.R
@@ -47,7 +47,7 @@ class GridSpanFragment : Fragment() {
 
         recycler_view.layoutManager = GridLayoutManager(activity, 4)
         //ModelService.getModelBeanList(6)
-        val adapter = GridSpanAdapter(activity!!, ModelService.getModelBeanList(1))
+        val adapter = GridSpanAdapter(activity!!, ModelService.getModelBeanList(10))
         adapter.addLoaderView(LoaderView())
         adapter.onLoadMoreListener = object : OnLoadMoreListener {
             override fun onLoadMore() {
@@ -64,7 +64,7 @@ class GridSpanFragment : Fragment() {
 
 class GridSpanAdapter(context: Context, list: List<ModelBean>) : MultiItemTypeAdapter<ModelBean>(context, list) {
     init {
-        addItemViewDelegate(GridSpanDelegate())
-        addItemViewDelegate(DefaultNullDelegate())
+        addItemViewDelegate(GridSpanDelegate(context))
+        addItemViewDelegate(ItemNullDelegate())
     }
 }

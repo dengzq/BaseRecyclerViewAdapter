@@ -30,6 +30,14 @@ object ModelService {
         return list
     }
 
+    fun getModelBeanList2(count: Int): MutableList<ModelBean> {
+        val list = ArrayList<ModelBean>()
+        (0 until count).mapTo(list) {
+            ModelBean("Eco Uzi  $it", getImageRes(), 3)
+        }
+        return list
+    }
+
     fun getNormalBeanList(count: Int): ArrayList<NormalBean> {
         val list = ArrayList<NormalBean>()
         (0 until count).mapTo(list) {

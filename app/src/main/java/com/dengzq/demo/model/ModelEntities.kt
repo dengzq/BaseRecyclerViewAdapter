@@ -6,7 +6,7 @@ package com.dengzq.demo.model
  * <p>package   com.dengzq.demo.model</p>
  * <p>readMe    TODO</p>
  */
-data class ModelBean(var nick: String, var avatar: Int, var type: Int)
+data class ModelBean(var nick: String, var avatar: Int, var type: Int, var offset: Int = 0)
 
 data class NormalBean(var title: String, var imgRes: Int)
 

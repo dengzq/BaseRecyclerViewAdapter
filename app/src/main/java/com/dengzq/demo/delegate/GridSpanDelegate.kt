@@ -2,10 +2,13 @@
 
 package com.dengzq.demo.delegate
 
+import android.content.Context
+import android.content.Intent
 import android.widget.ImageView
 import com.dengzq.baservadapter.BaseViewHolder
 import com.dengzq.baservadapter.interfaces.ItemViewDelegate
 import com.dengzq.demo.R
+import com.dengzq.demo.UsageExampleActivity
 import com.dengzq.demo.model.ModelBean
 
 /**
@@ -14,7 +17,7 @@ import com.dengzq.demo.model.ModelBean
  * <p>package   com.dengzq.demo.delegate</p>
  * <p>readMe    TODO</p>
  */
-class GridSpanDelegate : ItemViewDelegate<ModelBean>() {
+class GridSpanDelegate(val context: Context) : ItemViewDelegate<ModelBean>() {
 
     override fun getItemViewLayoutId(): Int = R.layout.item_deleagte_grid_span
 
@@ -26,6 +29,9 @@ class GridSpanDelegate : ItemViewDelegate<ModelBean>() {
             0 -> iv_img.setImageResource(R.mipmap.icon_card03)
             1, 2 -> iv_img.setImageResource(R.mipmap.icon_card04)
             else -> iv_img.setImageResource(R.mipmap.icon_card05)
+        }
+        iv_img.setOnClickListener {
+            context.startActivity(Intent(context,UsageExampleActivity::class.java))
         }
     }
 

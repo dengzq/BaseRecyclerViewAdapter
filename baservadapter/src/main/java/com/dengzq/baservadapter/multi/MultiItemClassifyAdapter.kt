@@ -37,8 +37,24 @@ abstract class MultiItemClassifyAdapter(context: Context) : BaseRvAdapter(contex
         delegateManager.addDelegate(delegate)
     }
 
-    override fun getRealSpanSize(position: Int,spanCount:Int): Int {
+    override fun getRealSpanSize(position: Int, spanCount: Int): Int {
         val delegate = delegateManager.getItemClassifyDelegate(getRealViewType(position))
-        return delegate.getItemSpanSize(position,spanCount)
+        return delegate.getItemSpanSize(position, spanCount)
+    }
+
+    override fun onDelegateViewAttachedToWindow(position: Int, holder: BaseViewHolder) {
+        delegateManager.onDelegateViewAttachedToWindow(position, holder)
+    }
+
+    override fun onDelegateViewDetachedFromWindow(position: Int, holder: BaseViewHolder) {
+        delegateManager.onDelegateViewDetachedFromWindow(position, holder)
+    }
+
+    override fun onDelegateFailedToRecycleView(position: Int, holder: BaseViewHolder): Boolean {
+        return delegateManager.onDelegateFailedToRecycleView(position, holder)
+    }
+
+    override fun onDelegateViewRecycled(position: Int, holder: BaseViewHolder) {
+        delegateManager.onDelegateViewRecycled(position, holder)
     }
 }

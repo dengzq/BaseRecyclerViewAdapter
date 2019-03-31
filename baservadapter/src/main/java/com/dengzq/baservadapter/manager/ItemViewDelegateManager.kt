@@ -61,4 +61,34 @@ internal class ItemViewDelegateManager<T> {
     fun getItemViewLayoutId(viewType: Int): Int = delegates.get(viewType).getItemViewLayoutId()
 
     fun getItemViewType(delegate: ItemViewDelegate<T>): Int = delegates.indexOfValue(delegate)
+
+    fun onDelegateViewAttachedToWindow(position: Int, t: T, holder: BaseViewHolder) {
+        val delegate = getItemViewDelegate(getItemViewType(t, position))
+        if (delegate.isForViewType(t, position)) {
+            delegate.onDelegateViewAttachedToWindow(position, holder)
+        }
+    }
+
+    fun onDelegateViewDetachedFromWindow(position: Int, t: T, holder: BaseViewHolder) {
+        val delegate = getItemViewDelegate(getItemViewType(t, position))
+        if (delegate.isForViewType(t, position)) {
+            delegate.onDelegateViewDetachedFromWindow(position, holder)
+        }
+    }
+
+    fun onDelegateFailedToRecycleView(position: Int, t: T, holder: BaseViewHolder): Boolean {
+        val delegate = getItemViewDelegate(getItemViewType(t, position))
+        if (delegate.isForViewType(t, position)) {
+            return delegate.onDelegateFailedToRecycleView(position, holder)
+        }
+
+        return false
+    }
+
+    fun onDelegateViewRecycled(position: Int, t: T, holder: BaseViewHolder) {
+        val delegate = getItemViewDelegate(getItemViewType(t, position))
+        if (delegate.isForViewType(t, position)) {
+            delegate.onDelegateViewRecycled(position, holder)
+        }
+    }
 }

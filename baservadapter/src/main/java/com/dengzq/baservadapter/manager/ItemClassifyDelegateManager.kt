@@ -71,4 +71,33 @@ internal class ItemClassifyDelegateManager {
             .sumBy { it.getItemSize() }
 
     fun getDelegateCount(): Int = delegates.size()
+
+    fun onDelegateViewAttachedToWindow(position: Int, holder: BaseViewHolder) {
+        val delegate = getItemClassifyDelegate(getItemViewType(position))
+        if (delegate.needShow()) {
+            delegate.onDelegateViewAttachedToWindow(position, holder)
+        }
+    }
+
+    fun onDelegateViewDetachedFromWindow(position: Int, holder: BaseViewHolder) {
+        val delegate = getItemClassifyDelegate(getItemViewType(position))
+        if (delegate.needShow()) {
+            delegate.onDelegateViewDetachedFromWindow(position, holder)
+        }
+    }
+
+    fun onDelegateFailedToRecycleView(position: Int, holder: BaseViewHolder): Boolean {
+        val delegate = getItemClassifyDelegate(getItemViewType(position))
+        if (delegate.needShow()) {
+            return delegate.onDelegateFailedToRecycleView(position, holder)
+        }
+        return false
+    }
+
+    fun onDelegateViewRecycled(position: Int, holder: BaseViewHolder) {
+        val delegate = getItemClassifyDelegate(getItemViewType(position))
+        if (delegate.needShow()) {
+            delegate.onDelegateViewRecycled(position, holder)
+        }
+    }
 }

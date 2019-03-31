@@ -70,7 +70,7 @@ class ClassifyPresenter(private val classifyView: IClassifyView) : IClassifyPres
         Handler().postDelayed({
 
             news.clear()
-            news.addAll(ModelService.getNews(8))
+            news.addAll(ModelService.getNews(40))
 
             classifyView.notifyDataSetChanged()
 
