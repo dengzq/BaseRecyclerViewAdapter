@@ -16,14 +16,14 @@
 
 #### Gradle
 ```
-compile 'com.dengzq.widget:baservadapter:0.8.3'
+compile 'com.dengzq.widget:baservadapter:0.8.4'
 ```
 #### Maven
 ```
 <dependency>
   <groupId>com.dengzq.widget</groupId>
   <artifactId>baservadapter</artifactId>
-  <version>0.8.3</version>
+  <version>0.8.4</version>
   <type>pom</type>
 </dependency>
 ```
