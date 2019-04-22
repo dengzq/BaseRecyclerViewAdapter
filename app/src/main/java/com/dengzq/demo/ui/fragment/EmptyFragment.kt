@@ -4,6 +4,7 @@ import android.graphics.Color
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -45,6 +46,7 @@ class EmptyFragment : Fragment() {
             text="EmptyView"
             textSize=30.0f
             setTextColor(Color.BLACK)
+            gravity=Gravity.CENTER
             setBackgroundColor(Color.parseColor("#5ccccc"))
         }
         adapter.setEmptyView(textView)
