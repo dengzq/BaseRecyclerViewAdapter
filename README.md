@@ -16,18 +16,8 @@
 
 #### Gradle
 ```
-compile 'com.dengzq.widget:baservadapter:0.8.5'
+compile 'com.dengzq.widget:baservadapter:0.8.6'
 ```
-#### Maven
-```
-<dependency>
-  <groupId>com.dengzq.widget</groupId>
-  <artifactId>baservadapter</artifactId>
-  <version>0.8.5</version>
-  <type>pom</type>
-</dependency>
-```
-
 #### 基本使用
 
 ##### 一. HeaderAndFooter
