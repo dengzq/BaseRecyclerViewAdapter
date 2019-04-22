@@ -35,7 +35,7 @@ class ClassifyBannerDelegate(private val context: Context, private val presenter
             iv.setImageResource(classifyBanner.banners[i])
             views.add(iv)
         }
-        banner.setData(views)
+        banner?.setData(views)
     }
 
     override fun getItemSpanSize(position: Int,spanCount:Int): Int = 4

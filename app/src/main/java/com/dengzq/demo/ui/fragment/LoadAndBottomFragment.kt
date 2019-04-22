@@ -138,7 +138,7 @@ class LoadAndBottomFragment : Fragment() {
                 Handler().postDelayed({
 
                     list.addAll(ModelService.getModelBeanList(5))
-                    recycler_view.adapter!!.notifyDataSetChanged()
+                    recycler_view.adapter?.notifyDataSetChanged()
 
                     adapter.loadMoreSuccess()
 

@@ -36,65 +36,65 @@ class BaseViewHolder(val context: Context, itemView: View) : RecyclerView.ViewHo
 
     }
 
-    fun <T : View> getView(resId: Int): T {
+    fun <T : View> getView(resId: Int): T? {
         var view = mViews.get(resId)
         if (view == null) {
             view = itemView.findViewById(resId)
             mViews.put(resId, view)
         }
-        return view!! as T
+        return view as? T
     }
 
     fun getConvertView(): View = itemView
 
     fun setText(viewId: Int, text: String): BaseViewHolder {
         val tv = getView<TextView>(viewId)
-        tv.text = text
+        tv?.text = text
         return this
     }
 
     fun setTextColor(viewId: Int, color: Int): BaseViewHolder {
         val tv = getView<TextView>(viewId)
-        tv.setTextColor(color)
+        tv?.setTextColor(color)
         return this
     }
 
     fun setTextSize(viewId: Int, size: Float): BaseViewHolder {
         val tv = getView<TextView>(viewId)
-        tv.textSize = size
+        tv?.textSize = size
         return this
     }
 
     fun setImageResource(viewId: Int, resId: Int): BaseViewHolder {
         val iv = getView<ImageView>(viewId)
-        iv.setImageResource(resId)
+        iv?.setImageResource(resId)
         return this
     }
 
     fun setImageDrawable(viewId: Int, drawable: Drawable): BaseViewHolder {
         val iv = getView<ImageView>(viewId)
-        iv.setImageDrawable(drawable)
+        iv?.setImageDrawable(drawable)
         return this
     }
 
     fun setImageBitmap(viewId: Int, bitmap: Bitmap): BaseViewHolder {
         val iv = getView<ImageView>(viewId)
-        iv.setImageBitmap(bitmap)
+        iv?.setImageBitmap(bitmap)
         return this
     }
 
     fun setBackgroundColor(viewId: Int, color: Int): BaseViewHolder {
-        getView<View>(viewId).setBackgroundColor(color)
+        getView<View>(viewId)?.setBackgroundColor(color)
         return this
     }
 
     fun setBackgroundRes(viewId: Int, resId: Int): BaseViewHolder {
-        getView<View>(viewId).setBackgroundResource(resId)
+        getView<View>(viewId)?.setBackgroundResource(resId)
         return this
     }
 
     fun setVisibility(viewId: Int, visible: Boolean): BaseViewHolder {
-        getView<View>(viewId).visibility = if (visible) View.VISIBLE else View.GONE
+        getView<View>(viewId)?.visibility = if (visible) View.VISIBLE else View.GONE
         return this
     }
 }

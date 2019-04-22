@@ -31,11 +31,11 @@ class HorizontalDelegate : ItemViewDelegate<ModelBean>() {
 
         val list = ModelService.getNormalBeanList(15)
 
-        recyclerView.layoutManager = LinearLayoutManager(recyclerView.context, LinearLayout.HORIZONTAL, false)
-        recyclerView.adapter = HorizontalTypeAdapter(recyclerView.context, list)
+        recyclerView?.layoutManager = LinearLayoutManager(recyclerView?.context, LinearLayout.HORIZONTAL, false)
+        recyclerView?.adapter = HorizontalTypeAdapter(recyclerView?.context!!, list)
 
-        recyclerView.clearOnScrollListeners()
-        recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+        recyclerView?.clearOnScrollListeners()
+        recyclerView?.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
                 sparseArray[bean] = recyclerView!!.computeHorizontalScrollOffset()
@@ -43,7 +43,7 @@ class HorizontalDelegate : ItemViewDelegate<ModelBean>() {
         })
 
         if (sparseArray[bean] != null) {
-            recyclerView.scrollBy(sparseArray[bean] ?: 0, 0)
+            recyclerView?.scrollBy(sparseArray[bean] ?: 0, 0)
         } else
             sparseArray[bean] = 0
     }

@@ -4,7 +4,7 @@ import android.content.Context
 import android.os.Bundle
 import android.os.Handler
 import android.support.v4.app.Fragment
-import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.GridLayoutManager
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -47,9 +47,9 @@ class SingleFragment : Fragment() {
         simple_refresh.setPullDownEnable(false)
         simple_refresh.setPullUpEnable(false)
 
-        val list = ModelService.getNormalBeanList(3)
+        val list = ModelService.getNormalBeanList(20)
         val adapter = SingleTypeAdapter(activity!!, list)
-        recycler_view.layoutManager = LinearLayoutManager(activity)
+        recycler_view.layoutManager = GridLayoutManager(activity,2)
         recycler_view.adapter = adapter
 
 
@@ -72,13 +72,13 @@ class SingleFragment : Fragment() {
             override fun onLoadMore() {
                 Handler().postDelayed({
 
-                    list.addAll(ModelService.getNormalBeanList(3))
+                    list.addAll(ModelService.getNormalBeanList(5))
                     adapter.notifyDataSetChanged()
                     adapter.loadMoreSuccess()
 
-                    if (adapter.list.size > 8) {
-                        adapter.isHasMore(false)
-                    }
+//                    if (adapter.list.size > 8) {
+//                        adapter.isHasMore(false)
+//                    }
 
                 }, 1000)
             }

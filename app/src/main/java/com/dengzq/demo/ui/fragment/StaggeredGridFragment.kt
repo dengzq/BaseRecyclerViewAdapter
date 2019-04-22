@@ -106,9 +106,9 @@ class StaggeredGridDelegate : ItemViewDelegate<ModelBean>() {
     override fun convert(holder: BaseViewHolder, t: ModelBean, position: Int) {
         val iv_img = holder.getView<ImageView>(R.id.iv_img)
         when (position % 7) {
-            0 -> iv_img.setImageResource(R.mipmap.icon_card03)
-            1, 2 -> iv_img.setImageResource(R.mipmap.icon_card04)
-            else -> iv_img.setImageResource(R.mipmap.icon_card05)
+            0 -> iv_img?.setImageResource(R.mipmap.icon_card03)
+            1, 2 -> iv_img?.setImageResource(R.mipmap.icon_card04)
+            else -> iv_img?.setImageResource(R.mipmap.icon_card05)
         }
     }
 }

@@ -27,11 +27,11 @@ class ClassifyTabDelegate(private val context: Context, private val presenter: I
         val classifyTab = presenter.getClassifyTab()[position]
 
         val recyclerView = holder.getView<RecyclerView>(R.id.recycler_view)
-        if (recyclerView.adapter != null) {
+        if (recyclerView?.adapter != null) {
             recyclerView.adapter.notifyDataSetChanged()
         } else {
-            recyclerView.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
-            recyclerView.adapter = SingleTypeAdapter(context, classifyTab.tabs)
+            recyclerView?.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
+            recyclerView?.adapter = SingleTypeAdapter(context, classifyTab.tabs)
         }
     }
 

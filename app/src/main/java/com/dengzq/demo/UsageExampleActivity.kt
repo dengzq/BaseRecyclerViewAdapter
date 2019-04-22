@@ -31,6 +31,7 @@ class UsageExampleActivity : AppCompatActivity() {
 
     private fun getFragmentList(): ArrayList<Fragment> {
         val fragments = ArrayList<Fragment>()
+        fragments.add(EmptyFragment())
         fragments.add(HeaderAndFooterFragment()) //header和footer示例
         fragments.add(LoadAndBottomFragment())   //加载更多和no more示例
         fragments.add(SingleFragment())          //普通用法示例
@@ -42,7 +43,7 @@ class UsageExampleActivity : AppCompatActivity() {
     }
 
     private fun getTitleList(): ArrayList<String> {
-        val titles = arrayListOf("header and footer", "loader more", "single", "multi item", "multi classify", "multi span"
+        val titles = arrayListOf("Empty","header and footer", "loader more", "single", "multi item", "multi classify", "multi span"
                 , "StaggeredGrid")
         return titles
     }

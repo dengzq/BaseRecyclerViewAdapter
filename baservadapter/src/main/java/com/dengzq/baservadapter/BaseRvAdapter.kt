@@ -10,8 +10,10 @@ import android.view.View
 import android.view.ViewGroup
 import com.dengzq.baservadapter.constants.LoadState
 import com.dengzq.baservadapter.interfaces.ILoaderView
+import com.dengzq.baservadapter.interfaces.IProcessor
 import com.dengzq.baservadapter.listener.*
 import com.dengzq.baservadapter.multi.wrapper.BottomWrapper
+import com.dengzq.baservadapter.multi.wrapper.EmptyWrapper
 import com.dengzq.baservadapter.multi.wrapper.HeaderAndFooterWrapper
 import com.dengzq.baservadapter.multi.wrapper.LoaderWrapper
 
@@ -38,16 +40,26 @@ abstract class BaseRvAdapter(val context: Context) : RecyclerView.Adapter<BaseVi
          * |------------------------|
          * |     Bottom(200002)     |
          * |------------------------|
+         * |     Empty(200003)      |
+         * |------------------------|
          */
         internal const val FOOTER_INDEX = 100000
         internal const val LOADER_INDEX = 200001
         internal const val BOTTOM_INDEX = 200002
+        internal const val EMPTY_INDEX = 200003
         internal const val REALER_INDEX = 300000
     }
 
+    private val processors: ArrayList<IProcessor> by lazy {
+        arrayListOf<IProcessor>().apply {
+            add(EmptyProcessor())
+            add(BaseProcessor())
+        }
+    }
     private val hfHelper = HeaderAndFooterWrapper()
     private val loadHelper = LoaderWrapper(context)
     private val btmHelper = BottomWrapper()
+    private val emptyHelper = EmptyWrapper()
 
     private var recyclerView: RecyclerView? = null
 
@@ -72,64 +84,19 @@ abstract class BaseRvAdapter(val context: Context) : RecyclerView.Adapter<BaseVi
     protected open fun convertFooter(holder: BaseViewHolder, position: Int, key: String) {}
     protected open fun convertLoader(holder: BaseViewHolder, position: Int) {}
     protected open fun convertBottom(holder: BaseViewHolder, position: Int) {}
+    protected open fun convertEmpty(holder: BaseViewHolder, position: Int) {}
 
-    override fun getItemViewType(position: Int): Int {
-        return when {
-            isHeaderPosition(position) ->
-                hfHelper.getHeaderType(position)
-            isFooterPosition(position) ->
-                hfHelper.getFooterType(position - hfHelper.getHeaderCount() - getRealItemCount())
-            isLoaderPosition(position) -> loadHelper.getLoadMoreViewType()
-            isBottomPosition(position) -> btmHelper.getBottomViewType()
-            else ->
-                getRealViewType(position - hfHelper.getHeaderCount())
-        }
-    }
+    override fun getItemViewType(position: Int): Int = getAdapterProcessor()?.getItemViewType(position) ?: 0
 
-    override fun getItemCount(): Int = hfHelper.getHeaderCount() + hfHelper.getFooterCount() + getRealItemCount() +
-            getBottomCount() + getLoaderCount()
+    override fun getItemCount(): Int = getAdapterProcessor()?.getItemCount() ?: 0
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
-        val holder: BaseViewHolder?
-
-        when {
-            hfHelper.getHeaderView(viewType) != null -> {
-                holder = BaseViewHolder.createViewHolder(context, hfHelper.getHeaderView(viewType)!!)
-                setOnHeaderClickListener(holder, viewType)
-            }
-            hfHelper.getFooterView(viewType) != null -> {
-                holder = BaseViewHolder.createViewHolder(context, hfHelper.getFooterView(viewType)!!)
-                setOnFooterClickListener(holder, viewType)
-            }
-            loadHelper.getLoadMoreViewType() == viewType -> {
-                holder = BaseViewHolder.createViewHolder(context, loadHelper.getLoadMoreView())
-                setOnLoaderClickListener(holder)
-            }
-            btmHelper.getBottomViewType() == viewType -> {
-                holder = BaseViewHolder.createViewHolder(context, btmHelper.getBottomView()!!)
-                setOnBottomClickListener(holder)
-            }
-            else -> {
-                holder = createRealHolder(parent, viewType)
-                setOnItemClickListener(holder)
-            }
-        }
-
-        return holder
+        return getAdapterProcessor()?.onCreateViewHolder(parent, viewType)
+                ?: BaseViewHolder.createViewHolder(context, View(context))
     }
 
     override fun onBindViewHolder(holder: BaseViewHolder, position: Int) {
-        when {
-            isHeaderPosition(position) -> convertHeader(holder, position, hfHelper.getHeaderKey(getItemViewType(position)))
-            isFooterPosition(position) -> convertFooter(holder, position, hfHelper.getFooterKey(getItemViewType(position)))
-            isBottomPosition(position) -> convertBottom(holder, position)
-            isLoaderPosition(position) -> {
-                convertLoader(holder, position)
-                autoLoadMore()
-            }
-            else -> bindRealHolder(holder, position - hfHelper.getHeaderCount())
-        }
-
+        getAdapterProcessor()?.onBindViewHolder(holder, position)
     }
 
     private fun setOnBottomClickListener(holder: BaseViewHolder) {
@@ -387,6 +354,124 @@ abstract class BaseRvAdapter(val context: Context) : RecyclerView.Adapter<BaseVi
         notifyDataSetChanged()
     }
 
+    fun setEmptyView(view: View?, notifyNow: Boolean = false) {
+        if (view != null && view != emptyHelper.getEmptyView()) {
+            emptyHelper.setEmptyView(view)
+            if (notifyNow)
+                notifyDataSetChanged()
+        }
+    }
+
+    fun removeEmptyView() {
+        if (emptyHelper.getEmptyView() != null) {
+            emptyHelper.removeEmptyView()
+            notifyDataSetChanged()
+        }
+    }
+
+    fun showEmpty(show: Boolean) {
+        if (show != emptyHelper.showEmpty) {
+            emptyHelper.showEmpty = show
+            notifyDataSetChanged()
+        }
+    }
+
     fun getHeaderCount(): Int = hfHelper.getHeaderCount()
     fun getFooterCount(): Int = hfHelper.getFooterCount()
+
+    /**
+     * Get processor to handle adapter event;
+     * See [processors]
+     */
+    private fun getAdapterProcessor(): IProcessor? {
+        for (i in 0 until processors.size) {
+            val processor = processors[i]
+            if (processor.isProcess()) {
+                return processor
+            }
+        }
+        return null
+    }
+
+    /**
+     * Empty Processor which to handle empty type fo RecyclerView;
+     * Empty view is a layout which can be seen when content is empty;
+     * See [setEmptyView] to set a empty view;
+     */
+    inner class EmptyProcessor : IProcessor {
+        override fun isProcess(): Boolean = !isHasContent()
+        override fun getItemCount(): Int = emptyHelper.getEmptyCount()
+        override fun getItemViewType(position: Int): Int = emptyHelper.getEmptyViewType()
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder = BaseViewHolder.createViewHolder(context, emptyHelper.getEmptyView()!!)
+        override fun onBindViewHolder(holder: BaseViewHolder, position: Int) {
+            convertEmpty(holder, position)
+        }
+    }
+
+    /**
+     * Base processor to handle normal view types which contains
+     * [header,footer,real item,loader,bottom];
+     * Base view type will be seen when [isHasContent] return true;
+     */
+    inner class BaseProcessor : IProcessor {
+        override fun isProcess(): Boolean = isHasContent()
+
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
+            val holder: BaseViewHolder?
+            when {
+                hfHelper.getHeaderView(viewType) != null -> {
+                    holder = BaseViewHolder.createViewHolder(context, hfHelper.getHeaderView(viewType)!!)
+                    setOnHeaderClickListener(holder, viewType)
+                }
+                hfHelper.getFooterView(viewType) != null -> {
+                    holder = BaseViewHolder.createViewHolder(context, hfHelper.getFooterView(viewType)!!)
+                    setOnFooterClickListener(holder, viewType)
+                }
+                loadHelper.getLoadMoreViewType() == viewType -> {
+                    holder = BaseViewHolder.createViewHolder(context, loadHelper.getLoadMoreView())
+                    setOnLoaderClickListener(holder)
+                }
+                btmHelper.getBottomViewType() == viewType -> {
+                    holder = BaseViewHolder.createViewHolder(context, btmHelper.getBottomView()!!)
+                    setOnBottomClickListener(holder)
+                }
+                else -> {
+                    holder = createRealHolder(parent, viewType)
+                    setOnItemClickListener(holder)
+                }
+            }
+            return holder
+        }
+
+        override fun getItemCount(): Int =
+                hfHelper.getHeaderCount() + hfHelper.getFooterCount() + getRealItemCount() +
+                        getBottomCount() + getLoaderCount()
+
+        override fun onBindViewHolder(holder: BaseViewHolder, position: Int) {
+            when {
+                isHeaderPosition(position) -> convertHeader(holder, position, hfHelper.getHeaderKey(getItemViewType(position)))
+                isFooterPosition(position) -> convertFooter(holder, position, hfHelper.getFooterKey(getItemViewType(position)))
+                isBottomPosition(position) -> convertBottom(holder, position)
+                isLoaderPosition(position) -> {
+                    convertLoader(holder, position)
+                    autoLoadMore()
+                }
+                else -> bindRealHolder(holder, position - hfHelper.getHeaderCount())
+            }
+        }
+
+        override fun getItemViewType(position: Int): Int {
+            return when {
+                isHeaderPosition(position) ->
+                    hfHelper.getHeaderType(position)
+                isFooterPosition(position) ->
+                    hfHelper.getFooterType(position - hfHelper.getHeaderCount() - getRealItemCount())
+                isLoaderPosition(position) -> loadHelper.getLoadMoreViewType()
+                isBottomPosition(position) -> btmHelper.getBottomViewType()
+                else ->
+                    getRealViewType(position - hfHelper.getHeaderCount())
+            }
+        }
+
+    }
 }
