@@ -70,6 +70,8 @@ abstract class BaseRvAdapter(val context: Context) : RecyclerView.Adapter<BaseVi
     var onLoaderClickListener: OnLoaderClickListener? = null
     var onBottomClickListener: OnBottomClickListener? = null
     var onLoadMoreListener: OnLoadMoreListener? = null
+    var onPreloadListener: OnPreloadListener? = null
+    var onAdapterLoadListener: OnAdapterLoadListener? = null
 
     protected abstract fun getRealSpanSize(position: Int, spanCount: Int): Int
     protected abstract fun getRealItemCount(): Int
@@ -133,7 +135,9 @@ abstract class BaseRvAdapter(val context: Context) : RecyclerView.Adapter<BaseVi
         }
     }
 
-    private fun isHasContent(): Boolean = getHeaderCount() + getRealItemCount() + getFooterCount() > 0
+    private fun getRealContentCount(): Int = getHeaderCount() + getRealItemCount() + getFooterCount()
+
+    private fun isHasContent(): Boolean = getRealContentCount() > 0
 
     private fun isHeaderPosition(position: Int): Boolean = hfHelper.getHeaderCount() > 0 && position < hfHelper.getHeaderCount()
 
@@ -179,7 +183,43 @@ abstract class BaseRvAdapter(val context: Context) : RecyclerView.Adapter<BaseVi
 
         //Auto load by loadMoreLis, or click to load by loadClickLis;
         if (loadHelper.autoLoad) {
-            recyclerView?.post { onLoadMoreListener?.onLoadMore() }
+            recyclerView?.post {
+                if (onAdapterLoadListener != null) {
+                    onAdapterLoadListener?.onLoadMore()
+                } else
+                    onLoadMoreListener?.onLoadMore()
+            }
+        }
+    }
+
+    /**
+     * Auto preload data;
+     * [onAdapterLoadListener] is always first choice to be invoked while
+     * loading more data; And remember to set loading action by [loadMoreFail]
+     * or [loadMoreSuccess], or [isHasMore];
+     */
+    private fun autoPreload(position: Int) {
+
+        if (onPreloadListener == null && onAdapterLoadListener == null) return
+
+        if (position >= getRealContentCount() - loadHelper.preloadCount) {
+            //Loading ,return;
+            if (loadHelper.state == LoadState.LOADING) return
+
+            //Don't has more,return;
+            if (!loadHelper.hasMore) {
+                loadHelper.notifyStateChanged(LoadState.NORMAL)
+                return
+            }
+
+            loadHelper.notifyStateChanged(LoadState.LOADING)
+
+            recyclerView?.post {
+                if (onAdapterLoadListener != null) {
+                    onAdapterLoadListener?.onLoadMore()
+                } else
+                    onPreloadListener?.onPreload()
+            }
         }
     }
 
@@ -344,6 +384,17 @@ abstract class BaseRvAdapter(val context: Context) : RecyclerView.Adapter<BaseVi
         }
     }
 
+    fun setPreloadCount(count: Int) {
+        loadHelper.preloadCount = count
+    }
+
+    fun showBottom(show: Boolean) {
+        if (show != btmHelper.isShowBottom()) {
+            btmHelper.showBottom(show)
+            notifyDataSetChanged()
+        }
+    }
+
     fun addBottomView(view: View?) {
         btmHelper.addBottomView(view)
         notifyDataSetChanged()
@@ -450,13 +501,19 @@ abstract class BaseRvAdapter(val context: Context) : RecyclerView.Adapter<BaseVi
         override fun onBindViewHolder(holder: BaseViewHolder, position: Int) {
             when {
                 isHeaderPosition(position) -> convertHeader(holder, position, hfHelper.getHeaderKey(getItemViewType(position)))
-                isFooterPosition(position) -> convertFooter(holder, position, hfHelper.getFooterKey(getItemViewType(position)))
+                isFooterPosition(position) -> {
+                    convertFooter(holder, position, hfHelper.getFooterKey(getItemViewType(position)))
+                    autoPreload(position)
+                }
                 isBottomPosition(position) -> convertBottom(holder, position)
                 isLoaderPosition(position) -> {
                     convertLoader(holder, position)
                     autoLoadMore()
                 }
-                else -> bindRealHolder(holder, position - hfHelper.getHeaderCount())
+                else -> {
+                    bindRealHolder(holder, position - hfHelper.getHeaderCount())
+                    autoPreload(position)
+                }
             }
         }
 

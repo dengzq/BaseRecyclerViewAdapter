@@ -24,6 +24,7 @@ internal class LoaderWrapper(private val context: Context) {
     private var errorLayout: View? = null
 
     var state = LoadState.NORMAL
+    var preloadCount: Int = 6//default preload
     var openLoad = true //whether open load;
     var autoLoad = true //whether auto load;
     var hasMore = true  //whether show load;

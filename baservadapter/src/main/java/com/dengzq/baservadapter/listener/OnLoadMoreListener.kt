@@ -7,6 +7,23 @@ package com.dengzq.baservadapter.listener
  * <p>readMe    Load More Listener</p>
  */
 
+/**
+ * OnLoadMoreListener will only be invoked while loading attach;
+ */
 interface OnLoadMoreListener {
+    fun onLoadMore()
+}
+
+/**
+ * OnPreloadListener will only be invoked while preLoad;
+ */
+interface OnPreloadListener {
+    fun onPreload()
+}
+
+/**
+ * OnAdapterLoadListener will be invoked when preLoad or loading;
+ */
+interface OnAdapterLoadListener {
     fun onLoadMore()
 }

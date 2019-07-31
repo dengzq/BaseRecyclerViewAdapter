@@ -12,8 +12,9 @@ import com.dengzq.baservadapter.BaseRvAdapter
 internal class BottomWrapper {
 
     private var view: View? = null
+    private var showBottom: Boolean = true
 
-    fun getBottomCount(): Int = if (view == null) 0 else 1
+    fun getBottomCount(): Int = if (view == null || !showBottom) 0 else 1
 
     fun getBottomViewType(): Int = BaseRvAdapter.BOTTOM_INDEX
 
@@ -25,5 +26,13 @@ internal class BottomWrapper {
 
     fun removeBottomView() {
         this.view = null
+    }
+
+    fun isShowBottom(): Boolean {
+        return showBottom
+    }
+
+    fun showBottom(show: Boolean) {
+        this.showBottom = show
     }
 }
