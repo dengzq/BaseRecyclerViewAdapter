@@ -99,7 +99,5 @@ class HeaderAndFooterFragment : Fragment() {
                 }
             }
         }
-
-        //test source tree
     }
 }
